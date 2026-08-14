@@ -53,6 +53,20 @@
     </aside>
   {% endif %}
 
+  {% if pe.related|default([])|length %}
+    <nav class="keep-learning" aria-label="{{ 'Related content'|t }}">
+      <h2 class="keep-learning__title">{{ 'Keep learning'|t }}</h2>
+      <ul>
+        {% for item in pe.related %}
+          <li>
+            <span class="poster__kicker">{{ item.kicker }}</span>
+            <a href="{{ item.url }}">{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+
   {% if pe.provenance %}
     <footer class="provenance">{{ pe.provenance }}</footer>
   {% endif %}

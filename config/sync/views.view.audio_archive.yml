@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - node.type.audio_item
     - taxonomy.vocabulary.topics
   module:
     - node
@@ -68,15 +67,6 @@ display:
           entity_field: status
           plugin_id: boolean
           value: '1'
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          value:
-            audio_item: audio_item
         tid:
           id: tid
           table: taxonomy_index
@@ -98,6 +88,13 @@ display:
           type: select
           hierarchy: false
           limit: true
+        field_audio_target_id:
+          id: field_audio_target_id
+          table: node__field_audio
+          field: field_audio_target_id
+          plugin_id: numeric
+          operator: 'not empty'
+          value: {  }
       style:
         type: default
         options: {  }
@@ -107,7 +104,18 @@ display:
           view_mode: teaser
       query:
         type: views_query
-        options: {  }
+        options:
+          distinct: true
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p class="section-intro">Listen in: recordings of interviews and gatherings, kept with the pages they belong to.</p>'
+            format: basic_html
       display_extenders: {  }
     cache_metadata:
       max-age: -1

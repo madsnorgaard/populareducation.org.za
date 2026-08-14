@@ -69,7 +69,55 @@ function pe_theme_preprocess_node(array &$variables): void {
   $builder = '_pe_theme_prepare_' . $node->bundle();
   $pe = function_exists($builder) ? $builder($node) : [];
   $pe += _pe_theme_prepare_common($node);
+  if (($variables['view_mode'] ?? '') === 'full') {
+    $pe['related'] = _pe_theme_related($node);
+  }
   $variables['pe'] = $pe;
+}
+
+/**
+ * Up to three published nodes sharing this node's first topic - the trail
+ * that keeps a reader moving. Falls back to recent siblings of the bundle.
+ *
+ * @return array<int, array<string, string>>
+ *   Related items: label, url, kicker.
+ */
+function _pe_theme_related(NodeInterface $node): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = [];
+  if ($node->hasField('field_topics') && !$node->get('field_topics')->isEmpty()) {
+    $tid = $node->get('field_topics')->target_id;
+    $ids = \Drupal::database()->select('taxonomy_index', 'ti')
+      ->fields('ti', ['nid'])
+      ->condition('tid', $tid)
+      ->condition('nid', $node->id(), '<>')
+      ->orderRandom()
+      ->range(0, 3)
+      ->execute()
+      ->fetchCol();
+  }
+  if (!$ids) {
+    $ids = \Drupal::entityQuery('node')
+      ->condition('type', $node->bundle())
+      ->condition('status', 1)
+      ->condition('nid', $node->id(), '<>')
+      ->sort('created', 'DESC')
+      ->range(0, 3)
+      ->accessCheck(TRUE)
+      ->execute();
+  }
+  $related = [];
+  foreach ($storage->loadMultiple($ids) as $r) {
+    if (!$r->isPublished()) {
+      continue;
+    }
+    $related[] = [
+      'label' => $r->label(),
+      'url' => $r->toUrl()->toString(),
+      'kicker' => $r->type->entity?->label() ?? $r->bundle(),
+    ];
+  }
+  return $related;
 }
 
 /**

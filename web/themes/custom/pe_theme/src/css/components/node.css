@@ -147,6 +147,54 @@
   display: block;
 }
 
+/* Keep learning: the trail out of every page. */
+.keep-learning {
+  margin: var(--gap-lg) 0 0;
+  border-top: var(--rule-heavy) solid var(--ink);
+  padding-top: 0.9rem;
+  max-width: var(--measure);
+}
+
+.keep-learning__title {
+  font-size: var(--fs-md);
+  margin-bottom: 0.6rem;
+}
+
+.keep-learning ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.keep-learning li {
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+}
+
+.keep-learning li:first-child {
+  border-top: 0;
+}
+
+.keep-learning a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.keep-learning a:hover {
+  color: var(--red);
+}
+
+/* Section intro on listing pages. */
+.section-intro {
+  font-size: var(--fs-md);
+  max-width: var(--measure);
+  margin-bottom: var(--gap);
+}
+
 /* Provenance note at the foot of migrated pages. */
 .provenance {
   margin-top: var(--gap-lg);
