@@ -1,0 +1,25 @@
+uuid: 6cb4db18-3cfe-4dc1-885b-43148b57fb98
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.audio_item
+    - taxonomy.vocabulary.topics
+id: node.audio_item.field_topics
+field_name: field_topics
+entity_type: node
+bundle: audio_item
+label: Topics
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    auto_create: true
+field_type: entity_reference

@@ -1,0 +1,23 @@
+uuid: dccedef7-3fd1-4c91-9e94-ff2f5f294ea4
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.tool
+  module:
+    - node
+id: node_tool
+label: Tools
+type: 'canonical_entities:node'
+pattern: '/tools/[node:title]'
+selection_criteria:
+  17c55922-92f3-4cbf-a449-57cb401d747a:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      tool: tool
+selection_logic: and
+weight: 0
+relationships: {  }

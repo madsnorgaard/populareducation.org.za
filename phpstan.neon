@@ -1,0 +1,9 @@
+parameters:
+  level: 6
+  paths:
+    - web/modules/custom
+    - web/themes/custom
+  drupal:
+    drupal_root: web
+  ignoreErrors: []
+  reportUnmatchedIgnoredErrors: false

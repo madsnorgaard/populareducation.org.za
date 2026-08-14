@@ -1,0 +1,14 @@
+name: populareducation
+type: drupal11
+docroot: web
+php_version: "8.4"
+webserver_type: nginx-fpm
+xdebug_enabled: false
+database:
+  type: mariadb
+  version: "11.4"
+composer_version: "2"
+use_dns_when_possible: true
+web_environment:
+  # Activates the config_split 'develop' split locally (see settings.php).
+  - CONFIG_SPLIT_DEVELOPMENT=true

@@ -1,0 +1,23 @@
+uuid: 437aa4dd-49cb-4e2d-b492-fd583a33bf27
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.library_item
+  module:
+    - node
+id: node_library_item
+label: Library
+type: 'canonical_entities:node'
+pattern: '/library/[node:title]'
+selection_criteria:
+  512b5d5b-c487-4351-b9c5-38a13ac50822:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      library_item: library_item
+selection_logic: and
+weight: 2
+relationships: {  }

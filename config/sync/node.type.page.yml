@@ -1,0 +1,11 @@
+uuid: d1eb73c3-0b3c-4724-a9b2-f8d0f665b80c
+langcode: en
+status: true
+dependencies: {  }
+name: Page
+type: page
+description: 'A plain page: About, Definitions, section landing pages.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

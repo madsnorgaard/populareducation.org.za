@@ -1,0 +1,11 @@
+uuid: 079a1fa7-5d45-44c5-941e-c8267bdc347a
+langcode: en
+status: true
+dependencies: {  }
+name: 'Audio item'
+type: audio_item
+description: 'A recording, e.g. from the Listening into Popular Education archive (PEN 2018).'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

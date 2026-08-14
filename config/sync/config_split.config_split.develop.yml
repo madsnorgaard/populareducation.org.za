@@ -1,0 +1,23 @@
+uuid: 9c25b5ae-366b-4ff8-bd6f-67fefe144e02
+langcode: en
+status: false
+dependencies: {  }
+id: develop
+label: Develop
+description: 'Dev-only modules: UIs and migrations. Never active in production.'
+weight: 0
+stackable: false
+no_patching: false
+storage: folder
+folder: ../config/develop
+module:
+  field_ui: 0
+  views_ui: 0
+  migrate: 0
+  migrate_drupal: 0
+  migrate_plus: 0
+  migrate_tools: 0
+  pe_migrate: 0
+theme: {  }
+complete_list: {  }
+partial_list: {  }

@@ -1,0 +1,121 @@
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
+services:
+  pe_drupal_db:
+    image: mariadb:11
+    container_name: pe_drupal_db
+    command: --transaction-isolation=READ-COMMITTED
+    env_file:
+      - .env
+    restart: always
+    environment:
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASS}"
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  drupal:
+    container_name: pe_drupal
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: always
+    ports:
+      - 9985:80
+    working_dir: /opt/drupal
+    volumes:
+      - ./backups:/opt/drupal/backups
+      - ./composer.json:/opt/drupal/composer.json
+      - ./composer.lock:/opt/drupal/composer.lock
+      - ./settings.php:/opt/drupal/web/sites/default/settings.php
+      - ./config:/opt/drupal/config
+      - ./web/modules/custom:/opt/drupal/web/modules/custom
+      - ./web/themes/custom:/opt/drupal/web/themes/custom
+      - ./web/sites/default/files:/opt/drupal/web/sites/default/files
+      - ./private:/opt/drupal/private
+      - ./scripts:/opt/drupal/scripts:ro
+    environment:
+      COMPOSER_MEMORY_LIMIT: "2G"
+      DOMAIN: ${DOMAIN_NAME}
+      TRUSTED_HOST_PATTERNS: ${TRUSTED_HOST_PATTERNS}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 3306
+      HASH_SALT: ${HASH_SALT}
+      PRIVATE_FILE_PATH: /opt/drupal/private
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: 6379
+      CONFIG_SPLIT_DEVELOPMENT: ${CONFIG_SPLIT_DEVELOPMENT:-false}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.pe_drupal.loadbalancer.server.port=80"
+      # Per-service CSP - Drupal admin needs unsafe-inline/unsafe-eval for CKEditor.
+      - "traefik.http.middlewares.pe-csp.headers.contentSecurityPolicy=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; upgrade-insecure-requests"
+      - "traefik.http.middlewares.pe-csp.headers.customResponseHeaders.X-Drupal-Cache="
+      - "traefik.http.middlewares.pe-csp.headers.customResponseHeaders.X-Drupal-Dynamic-Cache="
+      - "traefik.http.middlewares.pe-login-rl.ratelimit.average=30"
+      - "traefik.http.middlewares.pe-login-rl.ratelimit.period=1m"
+      - "traefik.http.middlewares.pe-login-rl.ratelimit.burst=15"
+      # DEV site until the domain conversation lands: basic-auth + noindex
+      # (pe-dev-gate defined in traefik_dynamic.toml). PROD routers are added
+      # once the public domain is decided.
+      - "traefik.http.routers.pe_drupal.rule=Host(`popular.madsnorgaard.net`)"
+      - "traefik.http.routers.pe_drupal.entrypoints=websecure"
+      - "traefik.http.routers.pe_drupal.tls.certresolver=lets-encrypt"
+      - "traefik.http.routers.pe_drupal.middlewares=pe-dev-gate@file,pe-csp"
+      - "traefik.http.routers.pe_drupal.service=pe_drupal"
+      - "traefik.http.routers.pe_dev_login.rule=Host(`popular.madsnorgaard.net`) && (PathPrefix(`/user`) || PathPrefix(`/admin`))"
+      - "traefik.http.routers.pe_dev_login.entrypoints=websecure"
+      - "traefik.http.routers.pe_dev_login.tls.certresolver=lets-encrypt"
+      - "traefik.http.routers.pe_dev_login.priority=100"
+      - "traefik.http.routers.pe_dev_login.middlewares=pe-login-rl,pe-dev-gate@file,pe-csp"
+      - "traefik.http.routers.pe_dev_login.service=pe_drupal"
+    networks:
+      - internal
+      - web
+    depends_on:
+      pe_drupal_db:
+        condition: service_healthy
+      pe_redis:
+        condition: service_healthy
+
+  pe_redis:
+    image: library/redis:latest
+    container_name: pe_redis
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - ./data/redis:/data
+    command: ["redis-server"]
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"

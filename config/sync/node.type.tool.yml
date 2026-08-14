@@ -1,0 +1,11 @@
+uuid: b7d7c405-3a86-4fd7-9415-b2b7d33dc4af
+langcode: en
+status: true
+dependencies: {  }
+name: Tool
+type: tool
+description: 'A practical popular-education resource: workshop guide, game, handbook, exercise.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

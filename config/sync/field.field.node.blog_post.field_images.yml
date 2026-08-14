@@ -1,0 +1,24 @@
+uuid: 97c3351d-e387-421f-995d-1150643fabda
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_images
+    - media.type.image
+    - node.type.blog_post
+id: node.blog_post.field_images
+field_name: field_images
+entity_type: node
+bundle: blog_post
+label: Images
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

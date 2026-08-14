@@ -1,0 +1,11 @@
+uuid: 4df87013-b78f-4a7a-9e46-55b505c95441
+langcode: en
+status: true
+dependencies: {  }
+name: Organisation
+type: organisation
+description: 'An organisation doing popular education - the movement directory.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

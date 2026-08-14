@@ -1,0 +1,23 @@
+uuid: 633417be-4a30-447a-8aff-24f1c7f1fbd7
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.audio_item
+  module:
+    - node
+id: node_audio_item
+label: Audio
+type: 'canonical_entities:node'
+pattern: '/audio/[node:title]'
+selection_criteria:
+  8a8b4a39-062f-489e-86be-4befa3102dc7:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      audio_item: audio_item
+selection_logic: and
+weight: 4
+relationships: {  }

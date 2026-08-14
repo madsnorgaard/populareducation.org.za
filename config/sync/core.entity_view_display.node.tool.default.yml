@@ -1,0 +1,43 @@
+uuid: f389c332-4caf-4f12-98f9-efe5010339b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.tool.body
+    - field.field.node.tool.field_documents
+    - field.field.node.tool.field_external_link
+    - field.field.node.tool.field_images
+    - field.field.node.tool.field_legacy_id
+    - field.field.node.tool.field_resource_type
+    - field.field.node.tool.field_source_org
+    - field.field.node.tool.field_topics
+    - node.type.tool
+  module:
+    - text
+    - user
+id: node.tool.default
+targetEntityType: node
+bundle: tool
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_documents: true
+  field_external_link: true
+  field_images: true
+  field_legacy_id: true
+  field_resource_type: true
+  field_source_org: true
+  field_topics: true
+  search_api_excerpt: true

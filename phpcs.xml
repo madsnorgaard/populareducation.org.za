@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="omarbadsha">
+  <description>Drupal + DrupalPractice standards for custom code.</description>
+
+  <file>web/modules/custom</file>
+  <file>web/themes/custom</file>
+
+  <arg name="extensions" value="php,module,inc,install,theme,profile"/>
+  <arg name="colors"/>
+  <arg value="sp"/>
+
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>

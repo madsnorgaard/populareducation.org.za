@@ -1,0 +1,11 @@
+uuid: 944e51f2-4dfd-49fa-9afe-af6499f2ca54
+langcode: en
+status: true
+dependencies: {  }
+name: 'Library item'
+type: library_item
+description: 'A text from the library: article, paper, book chapter, pamphlet.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

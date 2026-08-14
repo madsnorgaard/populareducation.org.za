@@ -1,0 +1,21 @@
+uuid: 75458734-dfd0-423e-b13b-87306f253b7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_active
+    - node.type.organisation
+id: node.organisation.field_active
+field_name: field_active
+entity_type: node
+bundle: organisation
+label: 'Still active'
+description: 'Is this organisation still active?'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Active
+  off_label: 'No longer active'
+field_type: boolean

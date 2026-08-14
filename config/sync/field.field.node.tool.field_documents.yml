@@ -1,0 +1,24 @@
+uuid: cd098b76-5cb3-4731-968b-8c28e1522073
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.tool
+id: node.tool.field_documents
+field_name: field_documents
+entity_type: node
+bundle: tool
+label: Documents
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

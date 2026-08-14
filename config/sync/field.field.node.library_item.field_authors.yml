@@ -1,0 +1,19 @@
+uuid: c03e0c51-9670-4417-bc6c-99de53f5ca1f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_authors
+    - node.type.library_item
+id: node.library_item.field_authors
+field_name: field_authors
+entity_type: node
+bundle: library_item
+label: Authors
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,24 @@
+uuid: 7df7cf3e-b69a-4cdf-8034-c9795727b18c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.library_item
+id: node.library_item.field_documents
+field_name: field_documents
+entity_type: node
+bundle: library_item
+label: Documents
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

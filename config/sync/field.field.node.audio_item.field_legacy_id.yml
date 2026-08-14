@@ -1,0 +1,19 @@
+uuid: 302fe9c3-d7aa-4ae9-94e0-c990da529109
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_legacy_id
+    - node.type.audio_item
+id: node.audio_item.field_legacy_id
+field_name: field_legacy_id
+entity_type: node
+bundle: audio_item
+label: 'Legacy ID'
+description: 'Original path on the Drupal 7 site. Set by pe_migrate; do not edit.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

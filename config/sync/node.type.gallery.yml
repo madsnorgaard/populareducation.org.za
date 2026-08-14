@@ -1,0 +1,11 @@
+uuid: 2e29c5cb-a382-4ff1-8d4b-d304b392df81
+langcode: en
+status: true
+dependencies: {  }
+name: Gallery
+type: gallery
+description: 'A photo gallery from an event, workshop or campaign.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

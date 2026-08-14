@@ -1,0 +1,19 @@
+uuid: 05dc0dca-8226-4c5d-be66-823276876ae9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_legacy_id
+    - node.type.gallery
+id: node.gallery.field_legacy_id
+field_name: field_legacy_id
+entity_type: node
+bundle: gallery
+label: 'Legacy ID'
+description: 'Original path on the Drupal 7 site. Set by pe_migrate; do not edit.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

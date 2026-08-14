@@ -1,0 +1,19 @@
+uuid: 0d9f99e7-71e9-41b3-95e1-f5f0e82d6d33
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_legacy_id
+    - node.type.tool
+id: node.tool.field_legacy_id
+field_name: field_legacy_id
+entity_type: node
+bundle: tool
+label: 'Legacy ID'
+description: 'Original path on the Drupal 7 site. Set by pe_migrate; do not edit.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

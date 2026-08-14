@@ -1,0 +1,24 @@
+uuid: 20e0ab15-2fbf-42ad-be1a-6c581a759c7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.page
+id: node.page.field_documents
+field_name: field_documents
+entity_type: node
+bundle: page
+label: Documents
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

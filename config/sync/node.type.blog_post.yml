@@ -1,0 +1,11 @@
+uuid: 915f85e6-cc07-428e-81a0-d3055257eeb9
+langcode: en
+status: true
+dependencies: {  }
+name: 'Blog post'
+type: blog_post
+description: 'A dated post or report.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

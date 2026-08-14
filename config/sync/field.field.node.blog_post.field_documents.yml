@@ -1,0 +1,24 @@
+uuid: 9d73f205-86ac-45e9-8b41-0f489d0076f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.blog_post
+id: node.blog_post.field_documents
+field_name: field_documents
+entity_type: node
+bundle: blog_post
+label: Documents
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

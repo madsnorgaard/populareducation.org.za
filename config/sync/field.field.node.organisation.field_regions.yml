@@ -1,0 +1,25 @@
+uuid: 6976c0ff-4eea-4a74-a5f7-f8c52cec5f2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_regions
+    - node.type.organisation
+    - taxonomy.vocabulary.regions
+id: node.organisation.field_regions
+field_name: field_regions
+entity_type: node
+bundle: organisation
+label: Regions
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      regions: regions
+    auto_create: true
+field_type: entity_reference
