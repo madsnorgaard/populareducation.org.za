@@ -6,5 +6,5 @@ parameters:
   ignoreErrors:
     # phpcs forbids @param docs on hook implementations, so the iterable
     # value type cannot be documented there.
-    - '#pe_theme_preprocess_(page|node)\(\) has parameter \$variables#'
+    - '#pe_theme_preprocess_\w+\(\) has parameter \$variables#'
   reportUnmatchedIgnoredErrors: false

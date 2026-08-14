@@ -219,6 +219,11 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
       $active = $active_raw === ''
         ? NULL
         : (int) !in_array($active_raw, $inactive_words, TRUE);
+      $date_iso = $record['date_iso'] ?? NULL;
+      $harvested = $record['provenance']['harvested_at'] ?? NULL;
+      $created = ($date_iso ? strtotime($date_iso) : FALSE)
+        ?: ($harvested ? strtotime((string) $harvested) : FALSE)
+        ?: time();
       $rows[] = [
         'legacy_path' => $legacy_path,
         'legacy_nid' => $record['identifiers']['legacy_nid'] ?? NULL,
@@ -226,7 +231,8 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
         'kind' => $record['kind'] ?? NULL,
         'body' => $record['body'] ?? NULL,
         'summary' => $record['summary'] ?? NULL,
-        'date_iso' => $record['date_iso'] ?? NULL,
+        'date_iso' => $date_iso,
+        'created_ts' => $created,
         'subjects' => array_values(array_filter(array_map('strval', $record['subjects'] ?? []))),
         'active' => $active,
         'doc_refs' => $doc_refs,

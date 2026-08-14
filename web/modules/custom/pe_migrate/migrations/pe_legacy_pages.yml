@@ -58,14 +58,7 @@ process:
         migration: pe_legacy_media_audio
         source: sha256
         no_stub: true
-  created:
-    -
-      plugin: skip_on_empty
-      method: process
-      source: date_iso
-    -
-      plugin: callback
-      callable: strtotime
+  created: created_ts
   status:
     plugin: default_value
     default_value: 0
