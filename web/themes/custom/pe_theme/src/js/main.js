@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
     button.className = 'load-more';
     button.textContent = 'Load more';
     pager.insertAdjacentElement('afterend', button);
+    // Scroll-to-load: when the button nears the viewport, press it.
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && !button.disabled) {
+        button.click();
+      }
+    }, { rootMargin: '400px 0px' });
+    io.observe(button);
     button.addEventListener('click', async () => {
       const next = nextLink();
       if (!next) {

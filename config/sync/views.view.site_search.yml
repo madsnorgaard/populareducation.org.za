@@ -70,7 +70,7 @@ display:
           table: views
           field: combine
           plugin_id: combine
-          operator: contains
+          operator: allwords
           exposed: true
           expose:
             operator_id: combine_op

@@ -37,6 +37,26 @@
     </ul>
   {% endif %}
 
+  {% if pe.archive_gap %}
+    <aside class="archive-gap">
+      <p>
+        {{ 'The Internet Archive preserved this page but not its content. If you have the original material, please get in touch.'|t }}
+        <a href="{{ pe.wayback_url }}" rel="external">{{ 'See the archived page'|t }} &rarr;</a>
+      </p>
+    </aside>
+  {% endif %}
+
+  {% if pe.pdf_viewer %}
+    <section class="pdf-viewer">
+      <h2 class="pdf-viewer__title">{{ 'Read it here'|t }}</h2>
+      <object data="{{ pe.pdf_viewer.url }}" type="application/pdf" aria-label="{{ pe.pdf_viewer.label }}">
+        <p>{{ 'Your browser does not display PDFs inline.'|t }}
+          <a href="{{ pe.pdf_viewer.url }}" download>{{ 'Download @label'|t({'@label': pe.pdf_viewer.label}) }}</a>
+        </p>
+      </object>
+    </section>
+  {% endif %}
+
   {% if pe.attachments|length %}
     <aside class="attachments">
       <h2 class="attachments__title">{{ 'Take it with you'|t }}</h2>

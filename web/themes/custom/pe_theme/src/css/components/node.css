@@ -147,6 +147,37 @@
   display: block;
 }
 
+/* PDF viewer: the document itself, readable in place. */
+.pdf-viewer {
+  margin: var(--gap-lg) 0;
+}
+
+.pdf-viewer__title {
+  font-size: var(--fs-md);
+  margin-bottom: 0.5rem;
+}
+
+.pdf-viewer object {
+  width: 100%;
+  max-width: 56rem;
+  height: 78vh;
+  border: var(--rule-light) solid var(--ink);
+  background: var(--paper-shade);
+}
+
+/* Archive gap: honesty about what the Wayback Machine could not keep. */
+.archive-gap {
+  border: var(--rule-light) solid var(--red);
+  padding: 0.9rem 1rem;
+  max-width: var(--measure);
+  margin: var(--gap) 0 var(--gap-lg);
+}
+
+.archive-gap p {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
 /* Keep learning: the trail out of every page. */
 .keep-learning {
   margin: var(--gap-lg) 0 0;

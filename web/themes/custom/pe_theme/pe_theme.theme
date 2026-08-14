@@ -183,10 +183,29 @@ function _pe_theme_prepare_common(NodeInterface $node): array {
     }
   }
 
+  // The first PDF reads in the page; all attachments stay downloadable.
+  foreach ($pe['attachments'] as $file) {
+    if ($file['ext'] === 'PDF') {
+      $pe['pdf_viewer'] = $file;
+      break;
+    }
+  }
+
   if ($node->hasField('field_legacy_id') && !$node->get('field_legacy_id')->isEmpty()) {
+    $legacy = $node->get('field_legacy_id')->value;
     $pe['provenance'] = t('Recovered from populareducation.org.za (@path) via the Internet Archive.', [
-      '@path' => $node->get('field_legacy_id')->value,
+      '@path' => $legacy,
     ]);
+    $pe['wayback_url'] = 'https://web.archive.org/web/2023/https://www.populareducation.org.za' . $legacy;
+  }
+
+  // An honest note when the archive preserved the page but not its substance.
+  $body_len = $node->hasField('body')
+    ? mb_strlen(trim(strip_tags((string) $node->get('body')->value)))
+    : 0;
+  $has_media = $pe['attachments'] || !empty($pe['tracks']) || $pe['image_url'];
+  if ($body_len < 40 && !$has_media && !empty($pe['wayback_url'])) {
+    $pe['archive_gap'] = TRUE;
   }
 
   return $pe;
