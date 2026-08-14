@@ -1,0 +1,24 @@
+uuid: 090d5110-8677-4560-9d89-358e8dd1baeb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audio
+    - media.type.audio
+    - node.type.blog_post
+id: node.blog_post.field_audio
+field_name: field_audio
+entity_type: node
+bundle: blog_post
+label: Audio
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      audio: audio
+field_type: entity_reference

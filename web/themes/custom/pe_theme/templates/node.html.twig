@@ -26,6 +26,17 @@
 
   {% block extra %}{% endblock %}
 
+  {% if pe.tracks|default([])|length %}
+    <ul class="audio-list">
+      {% for track in pe.tracks %}
+        <li>
+          <span class="slug">{{ track.label }}</span>
+          <audio controls preload="none" src="{{ track.url }}"></audio>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   {% if pe.attachments|length %}
     <aside class="attachments">
       <h2 class="attachments__title">{{ 'Take it with you'|t }}</h2>

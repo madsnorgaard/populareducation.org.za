@@ -293,9 +293,11 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
   /**
    * Builds redirect-mode rows.
    *
-   * Two flavours per record: the legacy alias path (skipped for 'page'
-   * records, which keep their exact legacy alias - a redirect would loop)
-   * and the /node/N shortlink when the legacy nid is known.
+   * One row per record: the legacy alias path, skipped for 'page' records
+   * (they keep their exact legacy alias - a redirect would loop). Legacy
+   * /node/N shortlinks are deliberately NOT redirected: the legacy nid
+   * namespace overlaps the new site's real /node/N paths, so such
+   * redirects hijack live nodes and create wrong redirect chains.
    *
    * @return array<int, array<string, mixed>>
    *   The source rows.
@@ -305,22 +307,13 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
     foreach ($this->loadRecords() as $record) {
       $legacy_path = (string) ($record['identifiers']['legacy_path'] ?? '');
       $kind = (string) ($record['kind'] ?? '');
-      if ($legacy_path === '' || $legacy_path === '/') {
+      if ($legacy_path === '' || $legacy_path === '/' || $kind === 'page') {
         continue;
       }
-      if ($kind !== 'page') {
-        $rows[] = [
-          'source_path' => ltrim($legacy_path, '/'),
-          'legacy_path' => $legacy_path,
-        ];
-      }
-      $nid = $record['identifiers']['legacy_nid'] ?? NULL;
-      if ($nid) {
-        $rows[] = [
-          'source_path' => 'node/' . $nid,
-          'legacy_path' => $legacy_path,
-        ];
-      }
+      $rows[] = [
+        'source_path' => ltrim($legacy_path, '/'),
+        'legacy_path' => $legacy_path,
+      ];
     }
     return $rows;
   }

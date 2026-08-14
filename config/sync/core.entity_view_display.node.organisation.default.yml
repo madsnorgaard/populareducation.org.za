@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.organisation.body
     - field.field.node.organisation.field_active
+    - field.field.node.organisation.field_audio
     - field.field.node.organisation.field_documents
     - field.field.node.organisation.field_images
     - field.field.node.organisation.field_legacy_id
@@ -34,6 +35,7 @@ content:
     region: content
 hidden:
   field_active: true
+  field_audio: true
   field_documents: true
   field_images: true
   field_legacy_id: true

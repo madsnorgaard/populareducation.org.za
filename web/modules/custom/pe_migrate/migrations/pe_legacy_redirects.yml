@@ -1,10 +1,10 @@
-# 301 redirects for every legacy path: the alias (/content/<slug>, ...) and
-# the /node/N shortlink, each resolved to the migrated node via a chained
-# migration_lookup across all pe_legacy_* node migrations (first match wins,
-# no stubs). Page records keep their exact legacy alias, so only their
-# /node/N row gets a redirect.
+# 301 redirects for every legacy alias (/content/<slug>, ...), resolved to
+# the migrated node via a chained migration_lookup across all pe_legacy_*
+# node migrations (first match wins, no stubs). Page records keep their
+# exact legacy alias instead. Legacy /node/N shortlinks are not redirected:
+# the legacy nid namespace overlaps the new site's real node ids.
 id: pe_legacy_redirects
-label: 'Legacy redirects (aliases + node paths)'
+label: 'Legacy redirects (aliases)'
 migration_tags:
   - pe_legacy
 source:

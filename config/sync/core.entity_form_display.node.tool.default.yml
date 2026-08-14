@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.tool.body
+    - field.field.node.tool.field_audio
     - field.field.node.tool.field_documents
     - field.field.node.tool.field_external_link
     - field.field.node.tool.field_images
@@ -37,6 +38,13 @@ content:
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_audio:
+    type: media_library_widget
+    weight: 128
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_documents:
     type: media_library_widget

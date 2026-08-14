@@ -1,0 +1,9 @@
+{#
+/**
+ * @file
+ * Page title block: suppressed where the template owns the heading.
+ */
+#}
+{% if not pe_hide_title %}
+  <div{{ attributes.addClass('page-title', 'register') }}>{{ title_prefix }}{{ content }}{{ title_suffix }}</div>
+{% endif %}

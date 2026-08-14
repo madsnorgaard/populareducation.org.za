@@ -45,6 +45,20 @@ function pe_theme_preprocess_page(array &$variables): void {
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for block templates.
+ *
+ * Node full pages and the front page render their own headings; the page
+ * title block would duplicate them.
+ */
+function pe_theme_preprocess_block(array &$variables): void {
+  if (($variables['plugin_id'] ?? '') === 'page_title_block') {
+    $route = \Drupal::routeMatch()->getRouteName();
+    $variables['pe_hide_title'] = $route === 'entity.node.canonical'
+      || \Drupal::service('path.matcher')->isFrontPage();
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK() for node templates.
  */
 function pe_theme_preprocess_node(array &$variables): void {
@@ -92,6 +106,15 @@ function _pe_theme_prepare_common(NodeInterface $node): array {
 
   if ($node->hasField('field_images') && !$node->get('field_images')->isEmpty()) {
     $pe['image_url'] = _pe_theme_image_url($node->get('field_images')->referencedEntities()[0], 'large');
+  }
+
+  if ($node->hasField('field_audio')) {
+    $pe['tracks'] = [];
+    foreach ($node->get('field_audio')->referencedEntities() as $media) {
+      if ($info = _pe_theme_file_info($media)) {
+        $pe['tracks'][] = $info;
+      }
+    }
   }
 
   if ($node->hasField('field_legacy_id') && !$node->get('field_legacy_id')->isEmpty()) {
@@ -159,15 +182,7 @@ function _pe_theme_prepare_gallery(NodeInterface $node): array {
  *   Prepared values.
  */
 function _pe_theme_prepare_audio_item(NodeInterface $node): array {
-  $tracks = [];
-  if ($node->hasField('field_audio')) {
-    foreach ($node->get('field_audio')->referencedEntities() as $media) {
-      if ($info = _pe_theme_file_info($media)) {
-        $tracks[] = $info;
-      }
-    }
-  }
-  $pe = ['tracks' => $tracks];
+  $pe = [];
   if ($node->hasField('field_event') && !$node->get('field_event')->isEmpty()) {
     $pe['event'] = $node->get('field_event')->value;
   }

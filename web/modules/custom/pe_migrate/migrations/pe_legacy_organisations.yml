@@ -50,6 +50,15 @@ process:
       plugin: skip_on_empty
       method: process
       source: active
+  field_audio:
+    plugin: sub_process
+    source: audio_refs
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: pe_legacy_media_audio
+        source: sha256
+        no_stub: true
   created:
     -
       plugin: skip_on_empty

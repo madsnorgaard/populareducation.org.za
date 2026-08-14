@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.organisation.body
     - field.field.node.organisation.field_active
+    - field.field.node.organisation.field_audio
     - field.field.node.organisation.field_documents
     - field.field.node.organisation.field_images
     - field.field.node.organisation.field_legacy_id
@@ -44,6 +45,13 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_audio:
+    type: media_library_widget
+    weight: 128
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_documents:
     type: media_library_widget

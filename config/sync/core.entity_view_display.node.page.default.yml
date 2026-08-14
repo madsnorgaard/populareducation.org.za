@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
+    - field.field.node.page.field_audio
     - field.field.node.page.field_documents
     - field.field.node.page.field_images
     - field.field.node.page.field_legacy_id
@@ -29,6 +30,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_audio: true
   field_documents: true
   field_images: true
   field_legacy_id: true

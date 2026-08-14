@@ -10,8 +10,8 @@ _core:
   default_config_hash: 6aOgWsNTXjqrDm98TXSAjP6qd2nCijD1xw45MrnbK-Y
 id: pe_theme_page_title
 theme: pe_theme
-region: header
-weight: -5
+region: content
+weight: -10
 provider: null
 plugin: page_title_block
 settings:

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.tool.body
+    - field.field.node.tool.field_audio
     - field.field.node.tool.field_documents
     - field.field.node.tool.field_external_link
     - field.field.node.tool.field_images
@@ -33,6 +34,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_audio: true
   field_documents: true
   field_external_link: true
   field_images: true

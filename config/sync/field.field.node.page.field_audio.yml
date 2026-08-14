@@ -1,0 +1,24 @@
+uuid: dcc48ece-af24-4580-bb46-ebf2c01e7c67
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audio
+    - media.type.audio
+    - node.type.page
+id: node.page.field_audio
+field_name: field_audio
+entity_type: node
+bundle: page
+label: Audio
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      audio: audio
+field_type: entity_reference

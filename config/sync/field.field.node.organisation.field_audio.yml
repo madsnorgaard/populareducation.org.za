@@ -1,0 +1,24 @@
+uuid: 6f186825-adba-410d-92ce-47f61d61f555
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audio
+    - media.type.audio
+    - node.type.organisation
+id: node.organisation.field_audio
+field_name: field_audio
+entity_type: node
+bundle: organisation
+label: Audio
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      audio: audio
+field_type: entity_reference
