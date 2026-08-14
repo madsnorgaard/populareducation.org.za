@@ -7,6 +7,13 @@ the outcome in the Resolution column (e.g. "Shirley has original",
 
 Harvested pages: 849  |  archived assets: 439
 
+## Leads for recovery
+
+- [Revolutionary Papers](https://revolutionarypapers.org) (Koni Benson, UWC) hosts
+  free movement pamphlets, pamphleting guides and the Pathways to Free
+  Education volumes - same tradition, possible holders of parallel material.
+  Contact: revolutionarypapers@gmail.com
+
 ## 1. Pages in the archive index that never returned 200
 
 | Path | Last status | Example URL | Resolution |
