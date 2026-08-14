@@ -1,0 +1,47 @@
+# Wraps migrated MP3s (the Listening into Popular Education archive) in
+# audio media entities.
+id: pe_legacy_media_audio
+label: 'Legacy media (audio)'
+migration_tags:
+  - pe_legacy
+source:
+  plugin: pe_wayback_items
+  row_mode: media
+  media_kinds:
+    - audio
+process:
+  _label:
+    -
+      plugin: null_coalesce
+      source:
+        - caption
+        - parent_title
+        - filename
+    -
+      plugin: default_value
+      default_value: 'Untitled legacy recording'
+  name:
+    plugin: substr
+    source: '@_label'
+    start: 0
+    length: 255
+  field_media_audio_file/target_id:
+    plugin: migration_lookup
+    migration: pe_legacy_files
+    source: sha256
+    no_stub: true
+  uid:
+    plugin: default_value
+    default_value: 1
+  status:
+    plugin: default_value
+    default_value: 1
+  langcode:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:media'
+  default_bundle: audio
+migration_dependencies:
+  required:
+    - pe_legacy_files

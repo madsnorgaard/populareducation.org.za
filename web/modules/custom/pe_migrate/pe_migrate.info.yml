@@ -1,0 +1,8 @@
+name: 'Popular Education Migrate'
+type: module
+description: 'Migrations importing the archived Drupal 7 content from the normalized Wayback harvest. Ships in the develop config split - never enabled in production.'
+package: 'Popular Education'
+core_version_requirement: ^11
+dependencies:
+  - drupal:migrate
+  - migrate_plus:migrate_plus

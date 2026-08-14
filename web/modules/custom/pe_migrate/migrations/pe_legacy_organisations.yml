@@ -1,0 +1,77 @@
+# Legacy organisations. Everything lands unpublished (status 0) - publishing is a human
+# editorial act. Topic terms are auto-created in the topics vocabulary.
+id: pe_legacy_organisations
+label: 'Legacy organisations'
+migration_tags:
+  - pe_legacy
+source:
+  plugin: pe_wayback_items
+  row_mode: node
+  kinds:
+    - organisation
+process:
+  title: title
+  body/value: body
+  body/format:
+    plugin: default_value
+    default_value: basic_html
+  field_topics:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: subjects
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: topics
+      value_key: name
+  field_legacy_id: legacy_path
+  field_documents:
+    plugin: sub_process
+    source: doc_refs
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: pe_legacy_media_documents
+        source: sha256
+        no_stub: true
+  field_images:
+    plugin: sub_process
+    source: image_refs
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: pe_legacy_media_images
+        source: sha256
+        no_stub: true
+  field_active:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: active
+  created:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: date_iso
+    -
+      plugin: callback
+      callable: strtotime
+  status:
+    plugin: default_value
+    default_value: 0
+  uid:
+    plugin: default_value
+    default_value: 1
+  langcode:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:node'
+  default_bundle: organisation
+migration_dependencies:
+  required:
+    - pe_legacy_media_documents
+    - pe_legacy_media_images
+    - pe_legacy_media_audio

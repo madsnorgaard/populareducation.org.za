@@ -1,0 +1,46 @@
+# Wraps migrated document files (PDF, DOC, ...) in document media entities.
+id: pe_legacy_media_documents
+label: 'Legacy media (documents)'
+migration_tags:
+  - pe_legacy
+source:
+  plugin: pe_wayback_items
+  row_mode: media
+  media_kinds:
+    - document
+process:
+  _label:
+    -
+      plugin: null_coalesce
+      source:
+        - caption
+        - parent_title
+        - filename
+    -
+      plugin: default_value
+      default_value: 'Untitled legacy document'
+  name:
+    plugin: substr
+    source: '@_label'
+    start: 0
+    length: 255
+  field_media_file/target_id:
+    plugin: migration_lookup
+    migration: pe_legacy_files
+    source: sha256
+    no_stub: true
+  uid:
+    plugin: default_value
+    default_value: 1
+  status:
+    plugin: default_value
+    default_value: 1
+  langcode:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:media'
+  default_bundle: document
+migration_dependencies:
+  required:
+    - pe_legacy_files

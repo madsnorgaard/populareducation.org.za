@@ -1,0 +1,27 @@
+# Copies harvested files into public://legacy/ and creates managed file
+# entities. Destination URIs are precomputed by the source plugin (filename
+# collisions get an 8-char sha256 prefix).
+id: pe_legacy_files
+label: 'Legacy files (harvested documents, images, audio)'
+migration_tags:
+  - pe_legacy
+source:
+  plugin: pe_wayback_items
+  row_mode: media
+process:
+  filename: filename
+  uri:
+    plugin: file_copy
+    source:
+      - source_full_path
+      - destination_uri
+    file_exists: replace
+  filemime: mime
+  uid:
+    plugin: default_value
+    default_value: 1
+  status:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:file'

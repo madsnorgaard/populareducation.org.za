@@ -1,0 +1,58 @@
+# 301 redirects for every legacy path: the alias (/content/<slug>, ...) and
+# the /node/N shortlink, each resolved to the migrated node via a chained
+# migration_lookup across all pe_legacy_* node migrations (first match wins,
+# no stubs). Page records keep their exact legacy alias, so only their
+# /node/N row gets a redirect.
+id: pe_legacy_redirects
+label: 'Legacy redirects (aliases + node paths)'
+migration_tags:
+  - pe_legacy
+source:
+  plugin: pe_wayback_items
+  row_mode: redirect
+  constants:
+    uri_prefix: 'internal:/node/'
+process:
+  _target_nid:
+    -
+      plugin: migration_lookup
+      migration:
+        - pe_legacy_tools
+        - pe_legacy_organisations
+        - pe_legacy_library
+        - pe_legacy_galleries
+        - pe_legacy_audio
+        - pe_legacy_blogs
+        - pe_legacy_pages
+      source: legacy_path
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Legacy path was not migrated - no redirect created.'
+  redirect_source/path: source_path
+  redirect_redirect/uri:
+    plugin: concat
+    source:
+      - constants/uri_prefix
+      - '@_target_nid'
+  status_code:
+    plugin: default_value
+    default_value: 301
+  language:
+    plugin: default_value
+    default_value: und
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:redirect'
+migration_dependencies:
+  required:
+    - pe_legacy_tools
+    - pe_legacy_organisations
+    - pe_legacy_library
+    - pe_legacy_galleries
+    - pe_legacy_audio
+    - pe_legacy_blogs
+    - pe_legacy_pages
