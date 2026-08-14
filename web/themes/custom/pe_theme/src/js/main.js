@@ -1,8 +1,41 @@
 // pe_theme behaviour: nothing but progressive niceties. The site must work
 // fully with JavaScript disabled.
 
+// Scroll reveal: posters and section rules ink onto the paper as they
+// arrive. Shared with load-more so appended cards reveal too.
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let revealObserver = null;
+const observeReveal = (root) => {
+  if (reducedMotion.matches) {
+    return;
+  }
+  if (!revealObserver) {
+    document.documentElement.classList.add('has-reveal');
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-inked');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -5% 0px' });
+  }
+  const targets = root.querySelectorAll
+    ? root.querySelectorAll('.poster:not(.is-inked), .register:not(.is-inked)')
+    : [];
+  let i = 0;
+  targets.forEach((el) => {
+    if (el.classList.contains('poster')) {
+      el.style.setProperty('--ink-delay', `${(i % 4) * 70}ms`);
+      i += 1;
+    }
+    revealObserver.observe(el);
+  });
+};
+
 // Mark the current section in the masthead nav.
 document.addEventListener('DOMContentLoaded', () => {
+  observeReveal(document);
   const path = window.location.pathname;
   document.querySelectorAll('.masthead__nav a').forEach((a) => {
     const href = a.getAttribute('href');
@@ -45,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const newGrid = doc.querySelector('.poster-grid');
         if (newGrid) {
-          grid.append(...newGrid.children);
+          const added = [...newGrid.children];
+          grid.append(...added);
+          observeReveal(grid);
         }
         const newPager = doc.querySelector('nav.pager');
         pager.innerHTML = newPager ? newPager.innerHTML : '';

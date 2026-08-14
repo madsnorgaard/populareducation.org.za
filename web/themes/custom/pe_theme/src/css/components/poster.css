@@ -1,9 +1,57 @@
-/* Teaser card: a pamphlet pinned to the wall. */
+/* Teaser card: a pamphlet pinned to the wall, stencil-cut corner. */
 .poster {
   border: 1px solid var(--ink);
   background: var(--paper);
   display: flex;
   flex-direction: column;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+/* Hover: the card lifts and a second colour prints behind it, offset like
+   a hand-pulled screen layer. */
+.poster:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 var(--red);
+}
+
+/* Scroll reveal: cards ink onto the paper as they enter (JS sets
+   .has-reveal on <html>; without JS everything is simply visible). */
+.has-reveal .poster {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.has-reveal .poster.is-inked {
+  opacity: 1;
+  transform: none;
+  transition: opacity 320ms ease, transform 320ms ease,
+    box-shadow 140ms ease;
+  transition-delay: var(--ink-delay, 0ms), var(--ink-delay, 0ms), 0ms;
+}
+
+.has-reveal .poster.is-inked:hover {
+  transform: translate(-3px, -3px);
+}
+
+/* The red register pass draws itself when a section arrives. */
+.has-reveal .register::after {
+  width: 0;
+  transition: width 500ms ease 150ms;
+}
+
+.has-reveal .register.is-inked::after {
+  width: 38%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-reveal .poster,
+  .has-reveal .register::after {
+    opacity: 1;
+    transform: none;
+    width: 38%;
+    transition: none;
+  }
 }
 
 .poster__image {

@@ -1,0 +1,23 @@
+uuid: 1062d428-be2e-4bb5-989f-5337c62a692e
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.regions
+  module:
+    - taxonomy
+id: term_regions
+label: 'Regions terms'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/regions/[term:name]'
+selection_criteria:
+  28ac7f42-3523-4479-a36e-b7b6e0743667:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      regions: regions
+selection_logic: and
+weight: 1
+relationships: {  }

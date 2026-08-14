@@ -27,24 +27,10 @@ display:
     display_options:
       fields: {  }
       pager:
-        type: mini
+        type: full
         options:
           offset: 0
-          pagination_heading_level: h4
-          items_per_page: 10
-          total_pages: 0
-          id: 0
-          tags:
-            next: ››
-            previous: ‹‹
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
+          items_per_page: 36
       exposed_form:
         type: basic
         options:
@@ -215,11 +201,7 @@ display:
             group_items: {  }
       style:
         type: default
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
+        options: {  }
       row:
         type: 'entity:node'
         options:

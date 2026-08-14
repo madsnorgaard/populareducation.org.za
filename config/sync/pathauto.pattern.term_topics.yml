@@ -1,0 +1,23 @@
+uuid: c753c53e-e7b6-452d-9000-2ae822df10db
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.topics
+  module:
+    - taxonomy
+id: term_topics
+label: 'Topics terms'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/topics/[term:name]'
+selection_criteria:
+  1a163e8f-a12b-4ed1-92ff-974c93fa94c3:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      topics: topics
+selection_logic: and
+weight: 0
+relationships: {  }
