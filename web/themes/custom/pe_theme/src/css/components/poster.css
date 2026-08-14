@@ -34,14 +34,16 @@
   transform: translate(-3px, -3px);
 }
 
-/* The red register pass draws itself when a section arrives. */
+/* The red register pass draws itself when a section arrives -
+   composited (scaleX), never layout-inducing. */
 .has-reveal .register::after {
-  width: 0;
-  transition: width 500ms ease 150ms;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 500ms ease 150ms;
 }
 
 .has-reveal .register.is-inked::after {
-  width: 38%;
+  transform: scaleX(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -49,7 +51,6 @@
   .has-reveal .register::after {
     opacity: 1;
     transform: none;
-    width: 38%;
     transition: none;
   }
 }

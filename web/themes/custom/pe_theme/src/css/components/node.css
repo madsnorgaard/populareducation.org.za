@@ -120,6 +120,13 @@
   margin: 0;
 }
 
+/* Reserve space before the image arrives - no layout shift. */
+.gallery-grid figure img {
+  aspect-ratio: 3 / 2;
+  width: 100%;
+  object-fit: cover;
+}
+
 .gallery-grid figcaption {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);

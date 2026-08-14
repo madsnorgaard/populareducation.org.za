@@ -51,13 +51,31 @@ function pe_theme_preprocess_page(array &$variables): void {
  * icons need their own link.
  */
 function pe_theme_page_attachments_alter(array &$attachments): void {
+  $theme_path = '/' . \Drupal::service('extension.list.theme')->getPath('pe_theme');
   $attachments['#attached']['html_head_link'][] = [
     [
       'rel' => 'apple-touch-icon',
       'sizes' => '180x180',
-      'href' => '/' . \Drupal::service('extension.list.theme')->getPath('pe_theme') . '/images/apple-touch-icon.png',
+      'href' => $theme_path . '/images/apple-touch-icon.png',
     ],
   ];
+  // Preload the three fonts every page paints with, so the swap window
+  // (and its layout shift) closes before first paint.
+  foreach ([
+    'anton-latin-400-normal.woff2',
+    'archivo-latin-wght-normal.woff2',
+    'ibm-plex-mono-latin-400-normal.woff2',
+  ] as $font) {
+    $attachments['#attached']['html_head_link'][] = [
+      [
+        'rel' => 'preload',
+        'as' => 'font',
+        'type' => 'font/woff2',
+        'href' => $theme_path . '/dist/fonts/' . $font,
+        'crossorigin' => 'anonymous',
+      ],
+    ];
+  }
 }
 
 /**
