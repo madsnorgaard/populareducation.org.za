@@ -10,6 +10,7 @@
 
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
+use Drupal\link\LinkItemInterface;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 
@@ -28,12 +29,17 @@ function pe_theme_preprocess_page(array &$variables): void {
       ->accessCheck(TRUE)
       ->count()
       ->execute();
+    $embed = fn(string $view): array => [
+      '#type' => 'view',
+      '#name' => $view,
+      '#display_id' => 'embed_1',
+    ];
     $variables['pe_front'] = [
       'org_count' => $count('organisation'),
       'tool_count' => $count('tool'),
-      'library' => views_embed_view('library', 'embed_1'),
-      'galleries' => views_embed_view('galleries', 'embed_1'),
-      'audio' => views_embed_view('audio_archive', 'embed_1'),
+      'library' => $embed('library'),
+      'galleries' => $embed('galleries'),
+      'audio' => $embed('audio_archive'),
     ];
   }
 }
@@ -109,7 +115,10 @@ function _pe_theme_prepare_organisation(NodeInterface $node): array {
     $pe['active'] = (bool) $node->get('field_active')->value;
   }
   if ($node->hasField('field_website') && !$node->get('field_website')->isEmpty()) {
-    $pe['website'] = $node->get('field_website')->first()->getUrl()->toString();
+    $item = $node->get('field_website')->first();
+    if ($item instanceof LinkItemInterface) {
+      $pe['website'] = $item->getUrl()->toString();
+    }
   }
   if ($node->hasField('field_regions')) {
     $pe['regions'] = array_map(
@@ -164,7 +173,7 @@ function _pe_theme_prepare_audio_item(NodeInterface $node): array {
   }
   if ($node->hasField('field_speakers')) {
     $pe['speakers'] = array_map(
-      fn($item) => $item->value,
+      fn($item) => $item->getString(),
       iterator_to_array($node->get('field_speakers'))
     );
   }

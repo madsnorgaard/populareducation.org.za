@@ -44,3 +44,6 @@ backups/
 /.editorconfig
 web/sites/default/default.settings.php
 web/sites/default/default.services.yml
+
+.jumbo/
+.jumbo/jumbo.db

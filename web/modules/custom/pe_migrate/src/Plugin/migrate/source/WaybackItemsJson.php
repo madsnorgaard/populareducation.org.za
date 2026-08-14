@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\pe_migrate\Plugin\migrate\source;
 
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\migrate\Attribute\MigrateSource;
@@ -48,6 +47,17 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
 
   /**
    * {@inheritdoc}
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container.
+   * @param array<string, mixed> $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\migrate\Plugin\MigrationInterface|null $migration
+   *   The migration this source plugin belongs to.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL): static {
     if ($migration === NULL) {
@@ -55,13 +65,21 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
     }
     $instance = new static($configuration, $plugin_id, $plugin_definition, $migration);
     $logger_factory = $container->get('logger.factory');
-    assert($logger_factory instanceof LoggerChannelFactoryInterface);
     $instance->logger = $logger_factory->get('pe_migrate');
     return $instance;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @param array<string, mixed> $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   The migration this source plugin belongs to.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
@@ -160,7 +178,9 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
     foreach (['images', 'files'] as $bucket) {
       $list = is_array($record[$bucket] ?? NULL) ? $record[$bucket] : [];
       foreach ($list as $ref) {
-        if (!is_array($ref) || empty($ref['downloaded']) || empty($ref['sha256']) || empty($ref['local_path'])) {
+        $usable = is_array($ref) && !empty($ref['downloaded'])
+          && !empty($ref['sha256']) && !empty($ref['local_path']);
+        if (!$usable) {
           continue;
         }
         $kind = (string) ($ref['kind'] ?? 'file');
@@ -195,6 +215,10 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
       }
       $legacy_path = (string) ($record['identifiers']['legacy_path'] ?? '/' . $record['source_id']);
       $active_raw = strtolower((string) ($record['extra']['field_active'] ?? ''));
+      $inactive_words = ['no', '0', 'false', 'inactive', 'no longer active'];
+      $active = $active_raw === ''
+        ? NULL
+        : (int) !in_array($active_raw, $inactive_words, TRUE);
       $rows[] = [
         'legacy_path' => $legacy_path,
         'legacy_nid' => $record['identifiers']['legacy_nid'] ?? NULL,
@@ -204,7 +228,7 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
         'summary' => $record['summary'] ?? NULL,
         'date_iso' => $record['date_iso'] ?? NULL,
         'subjects' => array_values(array_filter(array_map('strval', $record['subjects'] ?? []))),
-        'active' => $active_raw === '' ? NULL : (int) !in_array($active_raw, ['no', '0', 'false', 'inactive', 'no longer active'], TRUE),
+        'active' => $active,
         'doc_refs' => $doc_refs,
         'image_refs' => $image_refs,
         'audio_refs' => $audio_refs,

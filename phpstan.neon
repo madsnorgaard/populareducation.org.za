@@ -3,7 +3,8 @@ parameters:
   paths:
     - web/modules/custom
     - web/themes/custom
-  drupal:
-    drupal_root: web
-  ignoreErrors: []
+  ignoreErrors:
+    # phpcs forbids @param docs on hook implementations, so the iterable
+    # value type cannot be documented there.
+    - '#pe_theme_preprocess_(page|node)\(\) has parameter \$variables#'
   reportUnmatchedIgnoredErrors: false

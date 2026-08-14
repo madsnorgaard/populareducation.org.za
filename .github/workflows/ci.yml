@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: gd, pdo_mysql, mbstring
+          tools: composer:v2
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Security audit
+        run: composer audit --no-dev || true
+
+      - name: PHP CodeSniffer (Drupal, DrupalPractice)
+        run: vendor/bin/phpcs --standard=phpcs.xml -q
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress
+
+  # Clean-install config gate: a fresh site built purely from config/sync
+  # must import with zero drift.
+  config-install:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_RANDOM_ROOT_PASSWORD: "1"
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=30
+    env:
+      DB_NAME: drupal
+      DB_USER: drupal
+      DB_PASS: drupal
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      HASH_SALT: ci-not-a-secret
+      CONFIG_SPLIT_DEVELOPMENT: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: gd, pdo_mysql, mbstring, zip
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Install from config
+        run: vendor/bin/drush si --existing-config -y --account-pass=ci-only
+
+      - name: Import config (applies split transforms)
+        run: vendor/bin/drush cim -y
+
+      - name: Assert config:status is clean
+        run: |
+          vendor/bin/drush config:status --format=json | tee /tmp/cstat.json
+          COUNT=$(jq length /tmp/cstat.json)
+          if [ "$COUNT" != "0" ]; then
+            echo "::error title=Config drift::drush config:status is not empty after clean install + import"
+            exit 1
+          fi
+
+  # Theme asset gate: dist/ is the production transport (the deploy
+  # bind-mounts the theme directory, no node toolchain on the server), so
+  # the committed bundle must match a clean rebuild of src/.
+  theme-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/themes/custom/pe_theme/package-lock.json
+
+      - name: Install build dependencies
+        run: npm ci
+        working-directory: web/themes/custom/pe_theme
+
+      - name: Build theme assets
+        run: npm run build
+        working-directory: web/themes/custom/pe_theme
+
+      - name: dist/ must be committed and current
+        run: |
+          if ! git diff --exit-code -- web/themes/custom/pe_theme/dist ||
+             [ -n "$(git status --porcelain web/themes/custom/pe_theme/dist)" ]; then
+            echo "::error title=Stale dist::web/themes/custom/pe_theme/dist is out of date - run npm run build and commit the result"
+            exit 1
+          fi

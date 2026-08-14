@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="omarbadsha">
+<ruleset name="populareducation">
   <description>Drupal + DrupalPractice standards for custom code.</description>
 
   <file>web/modules/custom</file>
