@@ -45,6 +45,22 @@ function pe_theme_preprocess_page(array &$variables): void {
 }
 
 /**
+ * Implements hook_page_attachments_alter().
+ *
+ * Favicon.ico in the theme root is picked up by core; iOS home-screen
+ * icons need their own link.
+ */
+function pe_theme_page_attachments_alter(array &$attachments): void {
+  $attachments['#attached']['html_head_link'][] = [
+    [
+      'rel' => 'apple-touch-icon',
+      'sizes' => '180x180',
+      'href' => '/' . \Drupal::service('extension.list.theme')->getPath('pe_theme') . '/images/apple-touch-icon.png',
+    ],
+  ];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for block templates.
  *
  * Node full pages and the front page render their own headings; the page
