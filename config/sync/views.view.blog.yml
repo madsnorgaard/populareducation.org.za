@@ -92,8 +92,8 @@ display:
             identifier: topic
             required: false
             multiple: false
-            reduce: true
-          reduce_duplicates: true
+            reduce: false
+          reduce_duplicates: false
           vid: topics
           type: select
           hierarchy: false
