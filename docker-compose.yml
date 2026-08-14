@@ -76,19 +76,19 @@ services:
       - "traefik.http.middlewares.pe-login-rl.ratelimit.average=30"
       - "traefik.http.middlewares.pe-login-rl.ratelimit.period=1m"
       - "traefik.http.middlewares.pe-login-rl.ratelimit.burst=15"
-      # DEV site until the domain conversation lands: basic-auth + noindex
-      # (pe-dev-gate defined in traefik_dynamic.toml). PROD routers are added
-      # once the public domain is decided.
-      - "traefik.http.routers.pe_drupal.rule=Host(`popular.madsnorgaard.net`)"
+      # Temporary public home until the real domain lands: open, but
+      # X-Robots-Tag keeps search engines away from the interim URL.
+      - "traefik.http.middlewares.pe-noindex.headers.customResponseHeaders.X-Robots-Tag=noindex, nofollow"
+      - "traefik.http.routers.pe_drupal.rule=Host(`popedu.madsnorgaard.net`)"
       - "traefik.http.routers.pe_drupal.entrypoints=websecure"
       - "traefik.http.routers.pe_drupal.tls.certresolver=lets-encrypt"
-      - "traefik.http.routers.pe_drupal.middlewares=pe-dev-gate@file,pe-csp"
+      - "traefik.http.routers.pe_drupal.middlewares=pe-noindex,pe-csp"
       - "traefik.http.routers.pe_drupal.service=pe_drupal"
-      - "traefik.http.routers.pe_dev_login.rule=Host(`popular.madsnorgaard.net`) && (PathPrefix(`/user`) || PathPrefix(`/admin`))"
+      - "traefik.http.routers.pe_dev_login.rule=Host(`popedu.madsnorgaard.net`) && (PathPrefix(`/user`) || PathPrefix(`/admin`))"
       - "traefik.http.routers.pe_dev_login.entrypoints=websecure"
       - "traefik.http.routers.pe_dev_login.tls.certresolver=lets-encrypt"
       - "traefik.http.routers.pe_dev_login.priority=100"
-      - "traefik.http.routers.pe_dev_login.middlewares=pe-login-rl,pe-dev-gate@file,pe-csp"
+      - "traefik.http.routers.pe_dev_login.middlewares=pe-login-rl,pe-noindex,pe-csp"
       - "traefik.http.routers.pe_dev_login.service=pe_drupal"
     networks:
       - internal
