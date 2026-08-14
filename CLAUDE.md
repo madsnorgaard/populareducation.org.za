@@ -49,7 +49,9 @@ duplicate. Order: files -> media -> nodes -> redirects
 WARNING: `migrate:import --update` (and rollback + import) resets every
 migrated node to unpublished - it re-applies the draft-only default.
 Migrations are for the initial load; once editors start publishing, do
-not re-run them over published content.
+not re-run them over published content. A rollback also deletes the
+nodes, which purges any menu links pointing at them - re-run
+`drush scr scripts/seed-menus.php` afterwards (idempotent).
 
 # CLAUDE.md
 

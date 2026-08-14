@@ -164,10 +164,11 @@ function _pe_theme_prepare_gallery(NodeInterface $node): array {
     foreach ($node->get('field_images')->referencedEntities() as $media) {
       $url = _pe_theme_image_url($media, 'large');
       if ($url) {
+        $label = $media->label();
         $figures[] = [
           'url' => $url,
           'full' => _pe_theme_image_url($media, NULL),
-          'caption' => $media->label(),
+          'caption' => preg_match('/^(view larger image|untitled)/i', $label) ? NULL : $label,
         ];
       }
     }

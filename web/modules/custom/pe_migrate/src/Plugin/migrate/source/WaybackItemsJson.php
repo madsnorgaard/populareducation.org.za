@@ -304,6 +304,10 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
           $map[$origin_key] = $new_path;
         }
         $caption = trim((string) ($ref['caption'] ?? ''));
+        if (preg_match('/^(view larger image|download|click here.*)$/i', $caption)) {
+          // D7 UI chrome captured as link text, not a real caption.
+          $caption = '';
+        }
         $rows[] = [
           'sha256' => $sha256,
           'filename' => $filename,
