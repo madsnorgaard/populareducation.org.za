@@ -9,11 +9,12 @@
    marchers walking through it. */
 .manifesto {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(10rem, 16rem);
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 30rem);
   gap: var(--gap-lg);
   align-items: center;
   padding: var(--gap-lg) 0;
   margin-bottom: var(--gap-lg);
+  overflow-x: clip;
 }
 
 .manifesto__statement {
@@ -46,6 +47,11 @@
 .manifesto__art img {
   mix-blend-mode: multiply;
   border: 0;
+  width: 100%;
+  /* Scroll-driven: the dancers step in from the right and sway as you
+     scroll (set by src/js/main.js; static without JS or reduced motion). */
+  transform: translateX(var(--dance-x, 0)) rotate(var(--dance-r, 0deg));
+  will-change: transform;
 }
 
 .manifesto__art figcaption {
@@ -61,7 +67,7 @@
   }
 
   .manifesto__art {
-    max-width: 12rem;
+    max-width: 20rem;
   }
 }
 
