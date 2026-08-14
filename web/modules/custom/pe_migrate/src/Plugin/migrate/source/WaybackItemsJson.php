@@ -129,19 +129,31 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
   }
 
   /**
+   * Cached media index shared between row modes.
+   *
+   * @var array{map: array<string, string>, rows: array<int, array<string, mixed>>}|null
+   */
+  protected ?array $mediaIndex = NULL;
+
+  /**
    * Loads, filters and sorts the merged harvest JSON records.
+   *
+   * @param bool $apply_kinds
+   *   Whether to apply the 'kinds' configuration filter. The media index is
+   *   always built over the full corpus so destination filenames stay
+   *   collision-safe and identical across migrations.
    *
    * @return array<int, array<string, mixed>>
    *   Decoded records, sorted by legacy path.
    */
-  protected function loadRecords(): array {
+  protected function loadRecords(bool $apply_kinds = TRUE): array {
     $dir = $this->sourceRoot() . '/items/merged';
     if (!is_dir($dir)) {
       throw new MigrateException(sprintf('Harvest directory %s not found. Stage the harvest under the source root and/or set $settings[\'pe_migrate_source\'] - see pe_migrate/README.md.', $dir));
     }
     $files = glob($dir . '/*.json') ?: [];
     sort($files);
-    $kinds = $this->kinds();
+    $kinds = $apply_kinds ? $this->kinds() : [];
     $records = [];
     foreach ($files as $file) {
       $contents = file_get_contents($file);
@@ -203,6 +215,7 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
    */
   protected function buildNodeRows(): array {
     $rows = [];
+    $map = $this->mediaIndex()['map'];
     foreach ($this->loadRecords() as $record) {
       $doc_refs = $image_refs = $audio_refs = [];
       foreach ($this->mediaRefs($record) as $ref) {
@@ -229,7 +242,7 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
         'legacy_nid' => $record['identifiers']['legacy_nid'] ?? NULL,
         'title' => html_entity_decode((string) ($record['title'] ?? ''), ENT_QUOTES | ENT_HTML5),
         'kind' => $record['kind'] ?? NULL,
-        'body' => $record['body'] ?? NULL,
+        'body' => $this->rewriteBody((string) ($record['body'] ?? ''), $map),
         'summary' => $record['summary'] ?? NULL,
         'date_iso' => $date_iso,
         'created_ts' => $created,
@@ -245,32 +258,37 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
   }
 
   /**
-   * Builds media-mode rows: one row per unique downloaded file (sha256).
+   * Builds the shared media index over the FULL corpus.
    *
-   * Filename collisions with differing content get an 8-char sha prefix, so
-   * destination URIs are collision-safe and deterministic.
+   * - rows: one row per unique downloaded file (sha256). Filename
+   *   collisions with differing content get an 8-char sha prefix, so
+   *   destination URIs are collision-safe and deterministic.
+   * - map: normalized legacy /sites/default/files path -> new site path,
+   *   used to rewrite body HTML in node rows.
    *
-   * @return array<int, array<string, mixed>>
-   *   The source rows.
+   * @return array{map: array<string, string>, rows: array<int, array<string, mixed>>}
+   *   The media index.
    */
-  protected function buildMediaRows(): array {
+  protected function mediaIndex(): array {
+    if ($this->mediaIndex !== NULL) {
+      return $this->mediaIndex;
+    }
     $rows = [];
+    $map = [];
     $seen_sha = [];
     $filename_sha = [];
     $root = $this->sourceRoot();
-    $media_kinds = $this->configuration['media_kinds'] ?? [];
-    $media_kinds = is_array($media_kinds) ? array_map('strval', $media_kinds) : [];
-    foreach ($this->loadRecords() as $record) {
+    foreach ($this->loadRecords(FALSE) as $record) {
       $title = html_entity_decode((string) ($record['title'] ?? ''), ENT_QUOTES | ENT_HTML5);
       foreach ($this->mediaRefs($record) as $ref) {
-        if ($media_kinds && !in_array($ref['media_kind'], $media_kinds, TRUE)) {
-          continue;
-        }
         $sha256 = (string) $ref['sha256'];
+        $origin_key = $this->normalizeAssetPath((string) ($ref['origin_url'] ?? ''));
         if (isset($seen_sha[$sha256])) {
+          if ($origin_key && !isset($map[$origin_key])) {
+            $map[$origin_key] = $seen_sha[$sha256];
+          }
           continue;
         }
-        $seen_sha[$sha256] = TRUE;
         $local_path = (string) $ref['local_path'];
         $filename = (string) ($ref['filename'] ?? '') ?: preg_replace('/^[0-9a-f]{16}_/', '', basename($local_path));
         if (isset($filename_sha[$filename]) && $filename_sha[$filename] !== $sha256) {
@@ -279,6 +297,11 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
         else {
           $filename_sha[$filename] = $sha256;
           $destination_filename = $filename;
+        }
+        $new_path = '/sites/default/files/legacy/' . rawurlencode($destination_filename);
+        $seen_sha[$sha256] = $new_path;
+        if ($origin_key) {
+          $map[$origin_key] = $new_path;
         }
         $caption = trim((string) ($ref['caption'] ?? ''));
         $rows[] = [
@@ -292,6 +315,83 @@ final class WaybackItemsJson extends SourcePluginBase implements ContainerFactor
           'destination_uri' => 'public://legacy/' . $destination_filename,
         ];
       }
+    }
+    $this->mediaIndex = ['map' => $map, 'rows' => $rows];
+    return $this->mediaIndex;
+  }
+
+  /**
+   * Normalizes a legacy asset URL/path for map lookups.
+   *
+   * Strips scheme/host/query, decodes, lowercases, and collapses image
+   * style derivative paths (/sites/default/files/styles/X/public/...)
+   * to the original file path.
+   */
+  protected function normalizeAssetPath(string $url): string {
+    $path = (string) (parse_url($url, PHP_URL_PATH) ?: '');
+    if ($path === '') {
+      return '';
+    }
+    $path = mb_strtolower(rawurldecode($path));
+    $path = preg_replace('@^/sites/default/files/styles/[^/]+/public/@', '/sites/default/files/', $path) ?? $path;
+    return $path;
+  }
+
+  /**
+   * Rewrites body HTML to reference the migrated file copies.
+   *
+   * Legacy file paths point at the migrated copies; img tags whose file
+   * was never recovered are dropped (dead derivative paths would 404 as
+   * broken boxes).
+   *
+   * @param string $body
+   *   The body HTML.
+   * @param array<string, string> $map
+   *   Normalized legacy path -> new site path.
+   *
+   * @return string
+   *   The rewritten body HTML.
+   */
+  protected function rewriteBody(string $body, array $map): string {
+    if ($body === '') {
+      return $body;
+    }
+    // Rewrite src/href attributes that reference legacy files.
+    $body = preg_replace_callback(
+      '@(src|href)="([^"]*?/sites/default/files/[^"]*)"@i',
+      function (array $m) use ($map): string {
+        $key = $this->normalizeAssetPath($m[2]);
+        if (isset($map[$key])) {
+          return $m[1] . '="' . $map[$key] . '"';
+        }
+        return $m[0];
+      },
+      $body
+    ) ?? $body;
+    // Drop img tags still pointing at unrecovered legacy files.
+    $body = preg_replace(
+      '@<img[^>]+src="[^"]*?/sites/default/files/(?!legacy/)[^"]*"[^>]*/?>@i',
+      '',
+      $body
+    ) ?? $body;
+    return $body;
+  }
+
+  /**
+   * Builds media-mode rows from the shared index.
+   *
+   * @return array<int, array<string, mixed>>
+   *   The source rows.
+   */
+  protected function buildMediaRows(): array {
+    $media_kinds = $this->configuration['media_kinds'] ?? [];
+    $media_kinds = is_array($media_kinds) ? array_map('strval', $media_kinds) : [];
+    $rows = $this->mediaIndex()['rows'];
+    if ($media_kinds) {
+      $rows = array_values(array_filter(
+        $rows,
+        static fn(array $r): bool => in_array($r['media_kind'], $media_kinds, TRUE)
+      ));
     }
     return $rows;
   }
