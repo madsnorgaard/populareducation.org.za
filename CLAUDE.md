@@ -46,6 +46,11 @@ owners). Changes to the shared infra deploy.yml go via PR in that repo.
 duplicate. Order: files -> media -> nodes -> redirects
 (`--tag=pe_legacy` runs everything in dependency order).
 
+WARNING: `migrate:import --update` (and rollback + import) resets every
+migrated node to unpublished - it re-applies the draft-only default.
+Migrations are for the initial load; once editors start publishing, do
+not re-run them over published content.
+
 # CLAUDE.md
 
 ## Instructions for Agents on how to collaborate with Jumbo
