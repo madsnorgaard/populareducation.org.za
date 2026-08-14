@@ -76,8 +76,10 @@ function pe_theme_preprocess_node(array &$variables): void {
 }
 
 /**
- * Up to three published nodes sharing this node's first topic - the trail
- * that keeps a reader moving. Falls back to recent siblings of the bundle.
+ * Builds the Keep learning trail for a node.
+ *
+ * Up to three published nodes sharing this node's first topic; falls back
+ * to recent siblings of the bundle.
  *
  * @return array<int, array<string, string>>
  *   Related items: label, url, kicker.
