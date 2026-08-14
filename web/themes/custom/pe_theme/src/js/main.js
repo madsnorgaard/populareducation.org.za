@@ -19,16 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let ticking = false;
     const dance = () => {
       ticking = false;
-      const rect = art.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      // 0 when the art enters from the bottom, 1 when it leaves at the top.
-      const progress = Math.min(1, Math.max(0,
-        (vh - rect.top) / (vh + rect.height)));
-      // Step in from the right over the first third, then sway gently.
-      const enter = Math.min(1, progress * 3);
-      const x = (1 - enter) * 40;
-      const sway = Math.sin(progress * Math.PI * 2) * 2.5;
-      art.style.setProperty('--dance-x', `${x}%`);
+      const scrolled = window.scrollY || 0;
+      // The dancers rise and rock as you scroll: a visible kick, not a
+      // tremor. One full sway per ~700px of scroll, drifting upward.
+      const y = Math.min(120, scrolled * 0.22);
+      const sway = Math.sin(scrolled / 110) * 6;
+      art.style.setProperty('--dance-x', '0%');
+      art.style.setProperty('--dance-y', `${-y}px`);
       art.style.setProperty('--dance-r', `${sway}deg`);
     };
     const onScroll = () => {

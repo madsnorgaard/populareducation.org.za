@@ -48,9 +48,11 @@
   mix-blend-mode: multiply;
   border: 0;
   width: 100%;
-  /* Scroll-driven: the dancers step in from the right and sway as you
-     scroll (set by src/js/main.js; static without JS or reduced motion). */
-  transform: translateX(var(--dance-x, 0)) rotate(var(--dance-r, 0deg));
+  /* Scroll-driven: the dancers rise and rock as you scroll (set by
+     src/js/main.js; static without JS or reduced motion). */
+  transform: translate(var(--dance-x, 0), var(--dance-y, 0))
+    rotate(var(--dance-r, 0deg));
+  transform-origin: 50% 85%;
   will-change: transform;
 }
 
