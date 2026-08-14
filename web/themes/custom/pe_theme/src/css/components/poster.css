@@ -1,0 +1,100 @@
+/* Teaser card: a pamphlet pinned to the wall. */
+.poster {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.poster__image {
+  border-bottom: 1px solid var(--ink);
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--paper-shade);
+}
+
+.poster__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+
+.poster__body {
+  padding: 0.9rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.poster__kicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red);
+}
+
+.poster__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.poster__title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.poster__title a:hover {
+  color: var(--red);
+}
+
+.poster__summary {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.poster__meta {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+
+.poster__meta .has-files::before {
+  content: '\2193 ';
+  color: var(--red);
+  font-weight: 500;
+}
+
+/* Inactive organisations are stamped, not hidden. */
+.poster--inactive .poster__title {
+  color: var(--ink-soft);
+}
+
+.poster__stamp {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--ink-soft);
+  color: var(--ink-soft);
+  padding: 0.1rem 0.45rem;
+  transform: rotate(-2deg);
+}
+
+.poster__stamp--active {
+  border-color: var(--red);
+  color: var(--red);
+}

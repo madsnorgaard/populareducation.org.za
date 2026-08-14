@@ -1,0 +1,79 @@
+/* Layout: one column of paper, edge rules like a folded pamphlet. */
+.site {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site__inner {
+  width: 100%;
+  max-width: var(--site-max);
+  margin: 0 auto;
+  padding: 0 var(--gap);
+}
+
+.site-main {
+  flex: 1;
+  padding: var(--gap-lg) 0 calc(var(--gap-lg) * 1.5);
+}
+
+/* The registered heading: thick ink bar with the red pass printed 4px off.
+   This is the theme's signature - use .register on section headings only. */
+.register {
+  position: relative;
+  padding-top: calc(var(--rule-heavy) + var(--register-offset) + 0.5rem);
+  margin-bottom: 1rem;
+}
+
+.register::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--rule-heavy);
+  background: var(--ink);
+}
+
+.register::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--rule-heavy) + var(--register-offset) - var(--rule-light));
+  left: var(--register-offset);
+  width: 38%;
+  height: var(--rule-light);
+  background: var(--red);
+}
+
+/* Metadata line set like a typewriter slug. */
+.slug {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.slug a {
+  color: inherit;
+}
+
+/* Poster grid for teaser cards. */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--gap);
+  margin: var(--gap) 0;
+}
+
+/* Section wrapper on the front page. */
+.front-section {
+  margin-bottom: calc(var(--gap-lg) * 1.4);
+}
+
+.front-section__more {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

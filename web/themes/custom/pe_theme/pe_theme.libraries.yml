@@ -1,0 +1,9 @@
+# Built by Vite from src/ - run `npm run build` in the theme directory.
+# dist/ is committed: it is the production transport (the deploy bind-mounts
+# the theme directory; there is no node toolchain on the server).
+global:
+  css:
+    theme:
+      dist/main.css: { preprocess: false }
+  js:
+    dist/main.js: { preprocess: false, attributes: { defer: true } }

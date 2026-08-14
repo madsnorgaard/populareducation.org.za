@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Generic teaser: a pamphlet pinned to the wall. Bundle templates extend
+ * this via the same 'pe' variable; organisations add the active stamp.
+ */
+#}
+{% set inactive = pe.active is defined and pe.active == false %}
+<article{{ attributes.addClass('poster', inactive ? 'poster--inactive') }}>
+  {% if pe.image_url %}
+    <div class="poster__image">
+      <a href="{{ url }}" tabindex="-1" aria-hidden="true"><img src="{{ pe.image_url }}" alt="" loading="lazy" /></a>
+    </div>
+  {% endif %}
+  <div class="poster__body">
+    <span class="poster__kicker">{{ pe.kicker }}</span>
+    <h3 class="poster__title"><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+    {% if pe.active is defined %}
+      <span class="poster__stamp{{ pe.active ? ' poster__stamp--active' }}">
+        {{ pe.active ? 'Active'|t : 'No longer active'|t }}
+      </span>
+    {% endif %}
+    {% if node.body.summary is not empty %}
+      <p class="poster__summary">{{ node.body.summary }}</p>
+    {% endif %}
+    <div class="poster__meta">
+      {% if pe.attachments|length %}
+        <span class="has-files">{{ pe.attachments|length == 1 ? '1 file'|t : '@count files'|t({'@count': pe.attachments|length}) }}</span>
+      {% endif %}
+      {% for topic in pe.topics|slice(0, 3) %}
+        <span>{{ topic.label }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</article>

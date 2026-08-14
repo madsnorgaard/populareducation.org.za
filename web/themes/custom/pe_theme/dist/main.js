@@ -1,0 +1,1 @@
+document.addEventListener(`DOMContentLoaded`,()=>{let e=window.location.pathname;document.querySelectorAll(`.masthead__nav a`).forEach(t=>{let n=t.getAttribute(`href`);n&&n!==`/`&&e.startsWith(n)&&t.classList.add(`is-active`)})});

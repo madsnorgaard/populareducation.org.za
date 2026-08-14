@@ -1,0 +1,22 @@
+uuid: 1fd5f2d2-b148-4617-8e82-f8a2536e9d02
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - pe_theme
+_core:
+  default_config_hash: erQSEZF2XUjNmgTl0uNRBzmg18ZGXwUcw2FhApoeuHk
+id: pe_theme_content
+theme: pe_theme
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

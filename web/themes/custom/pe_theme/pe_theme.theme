@@ -1,0 +1,225 @@
+<?php
+
+/**
+ * @file
+ * Popular Education theme: all data shaping happens here, Twig stays dumb.
+ *
+ * One _pe_theme_prepare_<bundle>() builder per content type feeds a single
+ * 'pe' variable to the node templates.
+ */
+
+use Drupal\Core\Url;
+use Drupal\file\FileInterface;
+use Drupal\media\MediaInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function pe_theme_preprocess_page(array &$variables): void {
+  $variables['pe_logo'] = '/' . \Drupal::service('extension.list.theme')->getPath('pe_theme') . '/images/logo-march.png';
+  $variables['pe_action_art'] = '/' . \Drupal::service('extension.list.theme')->getPath('pe_theme') . '/images/action-figures.jpg';
+
+  if (!empty($variables['is_front'])) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $count = fn(string $bundle): int => (int) $node_storage->getQuery()
+      ->condition('type', $bundle)
+      ->condition('status', 1)
+      ->accessCheck(TRUE)
+      ->count()
+      ->execute();
+    $variables['pe_front'] = [
+      'org_count' => $count('organisation'),
+      'tool_count' => $count('tool'),
+      'library' => views_embed_view('library', 'embed_1'),
+      'galleries' => views_embed_view('galleries', 'embed_1'),
+      'audio' => views_embed_view('audio_archive', 'embed_1'),
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ */
+function pe_theme_preprocess_node(array &$variables): void {
+  $node = $variables['node'];
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  $builder = '_pe_theme_prepare_' . $node->bundle();
+  $pe = function_exists($builder) ? $builder($node) : [];
+  $pe += _pe_theme_prepare_common($node);
+  $variables['pe'] = $pe;
+}
+
+/**
+ * Shared data for every bundle: topics, attachments, provenance.
+ *
+ * @return array<string, mixed>
+ *   Prepared values.
+ */
+function _pe_theme_prepare_common(NodeInterface $node): array {
+  $pe = [
+    'kicker' => $node->type->entity?->label() ?? $node->bundle(),
+    'topics' => [],
+    'attachments' => [],
+    'image_url' => NULL,
+    'provenance' => NULL,
+  ];
+
+  if ($node->hasField('field_topics')) {
+    foreach ($node->get('field_topics')->referencedEntities() as $term) {
+      $pe['topics'][] = [
+        'label' => $term->label(),
+        'url' => Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()])->toString(),
+      ];
+    }
+  }
+
+  if ($node->hasField('field_documents')) {
+    foreach ($node->get('field_documents')->referencedEntities() as $media) {
+      if ($info = _pe_theme_file_info($media)) {
+        $pe['attachments'][] = $info;
+      }
+    }
+  }
+
+  if ($node->hasField('field_images') && !$node->get('field_images')->isEmpty()) {
+    $pe['image_url'] = _pe_theme_image_url($node->get('field_images')->referencedEntities()[0], 'large');
+  }
+
+  if ($node->hasField('field_legacy_id') && !$node->get('field_legacy_id')->isEmpty()) {
+    $pe['provenance'] = t('Recovered from populareducation.org.za (@path) via the Internet Archive.', [
+      '@path' => $node->get('field_legacy_id')->value,
+    ]);
+  }
+
+  return $pe;
+}
+
+/**
+ * Organisation extras: the active stamp and website link.
+ *
+ * @return array<string, mixed>
+ *   Prepared values.
+ */
+function _pe_theme_prepare_organisation(NodeInterface $node): array {
+  $pe = [];
+  if ($node->hasField('field_active') && !$node->get('field_active')->isEmpty()) {
+    $pe['active'] = (bool) $node->get('field_active')->value;
+  }
+  if ($node->hasField('field_website') && !$node->get('field_website')->isEmpty()) {
+    $pe['website'] = $node->get('field_website')->first()->getUrl()->toString();
+  }
+  if ($node->hasField('field_regions')) {
+    $pe['regions'] = array_map(
+      fn($term) => $term->label(),
+      $node->get('field_regions')->referencedEntities()
+    );
+  }
+  return $pe;
+}
+
+/**
+ * Gallery extras: the image figures.
+ *
+ * @return array<string, mixed>
+ *   Prepared values.
+ */
+function _pe_theme_prepare_gallery(NodeInterface $node): array {
+  $figures = [];
+  if ($node->hasField('field_images')) {
+    foreach ($node->get('field_images')->referencedEntities() as $media) {
+      $url = _pe_theme_image_url($media, 'large');
+      if ($url) {
+        $figures[] = [
+          'url' => $url,
+          'full' => _pe_theme_image_url($media, NULL),
+          'caption' => $media->label(),
+        ];
+      }
+    }
+  }
+  return ['figures' => $figures];
+}
+
+/**
+ * Audio extras: playable recordings.
+ *
+ * @return array<string, mixed>
+ *   Prepared values.
+ */
+function _pe_theme_prepare_audio_item(NodeInterface $node): array {
+  $tracks = [];
+  if ($node->hasField('field_audio')) {
+    foreach ($node->get('field_audio')->referencedEntities() as $media) {
+      if ($info = _pe_theme_file_info($media)) {
+        $tracks[] = $info;
+      }
+    }
+  }
+  $pe = ['tracks' => $tracks];
+  if ($node->hasField('field_event') && !$node->get('field_event')->isEmpty()) {
+    $pe['event'] = $node->get('field_event')->value;
+  }
+  if ($node->hasField('field_speakers')) {
+    $pe['speakers'] = array_map(
+      fn($item) => $item->value,
+      iterator_to_array($node->get('field_speakers'))
+    );
+  }
+  return $pe;
+}
+
+/**
+ * Resolves a media entity's file to url/label/extension/size.
+ *
+ * @return array<string, mixed>|null
+ *   File info, or NULL when the media has no file.
+ */
+function _pe_theme_file_info(MediaInterface $media): ?array {
+  $fid = $media->getSource()->getSourceFieldValue($media);
+  $file = $fid ? \Drupal::entityTypeManager()->getStorage('file')->load($fid) : NULL;
+  if (!$file instanceof FileInterface) {
+    return NULL;
+  }
+  $uri = $file->getFileUri();
+  return [
+    'url' => \Drupal::service('file_url_generator')->generateString($uri),
+    'label' => $media->label(),
+    'ext' => strtoupper(pathinfo($uri, PATHINFO_EXTENSION)),
+    'size' => _pe_theme_format_size((int) $file->getSize()),
+  ];
+}
+
+/**
+ * Compact human file size (kB/MB, one decimal).
+ */
+function _pe_theme_format_size(int $bytes): string {
+  if ($bytes >= 1048576) {
+    return round($bytes / 1048576, 1) . ' MB';
+  }
+  if ($bytes >= 1024) {
+    return round($bytes / 1024) . ' kB';
+  }
+  return $bytes . ' B';
+}
+
+/**
+ * URL of an image media derivative (NULL style = original file).
+ */
+function _pe_theme_image_url(MediaInterface $media, ?string $style_id): ?string {
+  $fid = $media->getSource()->getSourceFieldValue($media);
+  $file = $fid ? \Drupal::entityTypeManager()->getStorage('file')->load($fid) : NULL;
+  if (!$file instanceof FileInterface) {
+    return NULL;
+  }
+  $uri = $file->getFileUri();
+  if ($style_id) {
+    $style = \Drupal::entityTypeManager()->getStorage('image_style')->load($style_id);
+    if ($style) {
+      return $style->buildUrl($uri);
+    }
+  }
+  return \Drupal::service('file_url_generator')->generateString($uri);
+}

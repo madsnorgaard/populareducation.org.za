@@ -1,0 +1,20 @@
+uuid: be4d20b5-0b39-4ec6-86b6-f94f18df81d2
+langcode: en
+status: true
+dependencies:
+  theme:
+    - pe_theme
+id: pe_theme_local_tasks
+theme: pe_theme
+region: content
+weight: -15
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  label_display: '0'
+  provider: system
+  primary: true
+  secondary: true
+visibility: {  }

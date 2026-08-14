@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Views rows as the poster grid.
+ */
+#}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+<div class="poster-grid">
+  {% for row in rows %}
+    <div{{ row.attributes }}>{{ row.content }}</div>
+  {% endfor %}
+</div>

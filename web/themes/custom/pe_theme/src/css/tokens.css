@@ -1,0 +1,42 @@
+/* Design tokens - the print shop.
+ *
+ * The palette is the material of the movement's own media: unbleached
+ * newsprint, black linocut ink, one pass of silkscreen red. Nothing else.
+ * No gradients, no shadows, no rounded corners anywhere in this theme.
+ */
+:root {
+  /* Paper and ink. */
+  --paper: #f2ede1;
+  --paper-shade: #e7e0d0;
+  --ink: #1a1713;
+  --ink-soft: #4d463b;
+
+  /* One pass of red. Used for action, never for decoration. */
+  --red: #b5231f;
+  --red-dark: #8f1a17;
+
+  /* Type. */
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-body: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Scale - poster jumps, not gentle steps. */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1.0625rem;
+  --fs-md: 1.25rem;
+  --fs-lg: 1.75rem;
+  --fs-xl: 2.5rem;
+  --fs-2xl: clamp(3rem, 7vw, 5.5rem);
+
+  /* Rules - the misregistered silkscreen signature. A heading sits on a
+     thick ink bar; a thin red bar prints 4px off. */
+  --rule-heavy: 6px;
+  --rule-light: 2px;
+  --register-offset: 4px;
+
+  --measure: 44rem;
+  --site-max: 76rem;
+  --gap: 1.25rem;
+  --gap-lg: 2.5rem;
+}

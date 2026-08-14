@@ -1,0 +1,25 @@
+/* Print: these pages are made to be photocopied and handed out. */
+@media print {
+  .masthead__nav,
+  .masthead__search,
+  .site-footer nav,
+  .views-exposed-form,
+  .pager {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .node__body a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+  }
+}

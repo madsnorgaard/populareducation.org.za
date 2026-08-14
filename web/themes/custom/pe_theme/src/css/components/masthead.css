@@ -1,0 +1,125 @@
+/* Masthead: a placard, not a navbar. */
+.masthead {
+  border-bottom: var(--rule-heavy) solid var(--ink);
+  background: var(--paper);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  padding: 1.25rem var(--gap) 0.9rem;
+  max-width: var(--site-max);
+  margin: 0 auto;
+}
+
+.masthead__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.masthead__logo {
+  width: 64px;
+  height: auto;
+  /* The linocut sits directly on the paper - no white box. */
+  mix-blend-mode: multiply;
+}
+
+.masthead__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.masthead__title span {
+  display: block;
+}
+
+.masthead__title .is-red {
+  color: var(--red);
+}
+
+.masthead__tagline {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin: 0.35rem 0 0;
+  text-transform: none;
+}
+
+/* Navigation: stencilled tabs. */
+.masthead__nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.masthead__nav a {
+  display: block;
+  padding: 0.45rem 0.7rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.masthead__nav a:hover,
+.masthead__nav a.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.masthead__search {
+  display: flex;
+}
+
+.masthead__search input[type='search'] {
+  border: var(--rule-light) solid var(--ink);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  padding: 0.35rem 0.5rem;
+  width: 9.5rem;
+}
+
+.masthead__search button {
+  border: var(--rule-light) solid var(--ink);
+  border-left: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--fs-sm);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+
+.masthead__search button:hover {
+  background: var(--red);
+}
+
+@media (max-width: 47rem) {
+  .masthead__inner {
+    align-items: flex-start;
+  }
+
+  .masthead__nav {
+    width: 100%;
+    order: 3;
+    border-top: 1px solid var(--ink);
+    padding-top: 0.4rem;
+  }
+}

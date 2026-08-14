@@ -1,0 +1,26 @@
+uuid: 039ca5c6-7c5a-4770-a847-6391a7534b0b
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - pe_theme
+_core:
+  default_config_hash: 6aOgWsNTXjqrDm98TXSAjP6qd2nCijD1xw45MrnbK-Y
+id: pe_theme_page_title
+theme: pe_theme
+region: header
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    pages: '<front>'

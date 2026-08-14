@@ -1,0 +1,108 @@
+/* Front page: the wall. */
+
+/* Embedded views on the front never show their order form. */
+.front-section .views-exposed-form {
+  display: none;
+}
+
+/* The thesis: what popular education is, in poster type, with the linocut
+   marchers walking through it. */
+.manifesto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, 16rem);
+  gap: var(--gap-lg);
+  align-items: center;
+  padding: var(--gap-lg) 0;
+  margin-bottom: var(--gap-lg);
+}
+
+.manifesto__statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+  line-height: 1.04;
+  text-transform: uppercase;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.manifesto__statement .is-red {
+  color: var(--red);
+}
+
+.manifesto__note {
+  font-size: var(--fs-md);
+  max-width: 34ch;
+  margin: 1.25rem 0 0;
+}
+
+.manifesto__note a {
+  font-weight: 600;
+}
+
+.manifesto__art {
+  margin: 0;
+}
+
+.manifesto__art img {
+  mix-blend-mode: multiply;
+  border: 0;
+}
+
+.manifesto__art figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  padding-top: 0.4rem;
+}
+
+@media (max-width: 47rem) {
+  .manifesto {
+    grid-template-columns: 1fr;
+  }
+
+  .manifesto__art {
+    max-width: 12rem;
+  }
+}
+
+/* Directory strip: organisations as a roll call. */
+.rollcall {
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--gap-lg) var(--gap);
+  margin: var(--gap-lg) calc(-1 * var(--gap));
+}
+
+.rollcall h2 {
+  color: var(--paper);
+}
+
+.rollcall p {
+  color: var(--paper);
+  max-width: var(--measure);
+}
+
+.rollcall a {
+  color: var(--paper);
+  text-decoration-color: var(--red);
+}
+
+.rollcall a:hover {
+  color: var(--red);
+}
+
+.rollcall .btn {
+  background: var(--red);
+  color: var(--paper);
+  text-decoration: none;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  padding: 0.55rem 1.1rem;
+  display: inline-block;
+  letter-spacing: 0.04em;
+}
+
+.rollcall .btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+}

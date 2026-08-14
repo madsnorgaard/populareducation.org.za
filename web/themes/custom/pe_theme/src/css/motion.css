@@ -1,0 +1,15 @@
+/* Motion: almost none. Print does not animate; links and buttons snap. */
+a,
+button,
+input[type='submit'] {
+  transition: background-color 120ms linear, color 120ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

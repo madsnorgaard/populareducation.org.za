@@ -1,0 +1,25 @@
+{% extends 'node.html.twig' %}
+{#
+/**
+ * @file
+ * Audio item: playable recordings after the body.
+ */
+#}
+{% block extra %}
+  {% if pe.tracks|default([])|length %}
+    <ul class="audio-list">
+      {% for track in pe.tracks %}
+        <li>
+          <span class="slug">
+            {{ track.label }}
+            {% if pe.event %} &middot; {{ pe.event }}{% endif %}
+          </span>
+          <audio controls preload="none" src="{{ track.url }}"></audio>
+        </li>
+      {% endfor %}
+    </ul>
+    {% if pe.speakers|default([])|length %}
+      <p class="slug">{{ 'Voices: @speakers'|t({'@speakers': pe.speakers|join(', ')}) }}</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

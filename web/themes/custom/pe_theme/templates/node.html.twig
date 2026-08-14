@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Default full node: the document. Header, topic tags, body, attachments,
+ * provenance. Bundle-specific templates layer on top of this shape.
+ */
+#}
+<article{{ attributes.addClass('node-full') }}>
+  <header class="node-full__header register">
+    <span class="slug">{{ pe.kicker }}</span>
+    <h1 class="node-full__title">{{ label }}</h1>
+    {% if pe.topics|length %}
+      <ul class="node-full__topics">
+        {% for topic in pe.topics %}
+          <li><a href="{{ topic.url }}">{{ topic.label }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </header>
+
+  {% block facts %}{% endblock %}
+
+  <div class="node__body">
+    {{ content.body }}
+  </div>
+
+  {% block extra %}{% endblock %}
+
+  {% if pe.attachments|length %}
+    <aside class="attachments">
+      <h2 class="attachments__title">{{ 'Take it with you'|t }}</h2>
+      <ul>
+        {% for file in pe.attachments %}
+          <li>
+            <a href="{{ file.url }}" download>
+              <span>{{ file.label }}</span>
+              <span class="attachments__ext">{{ file.ext }} &middot; {{ file.size }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+  {% endif %}
+
+  {% if pe.provenance %}
+    <footer class="provenance">{{ pe.provenance }}</footer>
+  {% endif %}
+</article>

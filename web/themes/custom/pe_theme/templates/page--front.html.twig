@@ -1,0 +1,118 @@
+{#
+/**
+ * @file
+ * Front page: the wall. Manifesto, tools spotlight, roll call, library,
+ * galleries, the audio archive.
+ *
+ * page.content carries the front_tools view (site front page = /front).
+ */
+#}
+<div class="site">
+  <header class="masthead">
+    <div class="masthead__inner">
+      <a href="{{ path('<front>') }}" class="masthead__brand" rel="home">
+        <img class="masthead__logo" src="{{ pe_logo }}" alt="" width="64" height="73" />
+        <span>
+          <span class="masthead__title">
+            <span>Popular</span>
+            <span class="is-red">Education</span>
+            <span>South Africa</span>
+          </span>
+          <span class="masthead__tagline">Looking back to go forward together</span>
+        </span>
+      </a>
+
+      <form class="masthead__search" action="/search" method="get" role="search">
+        <label for="masthead-q" class="visually-hidden">{{ 'Search the site'|t }}</label>
+        <input id="masthead-q" type="search" name="q" placeholder="{{ 'Search'|t }}" />
+        <button type="submit">{{ 'Go'|t }}</button>
+      </form>
+
+      <nav class="masthead__nav" aria-label="{{ 'Main navigation'|t }}">
+        {{ page.header }}
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="site__inner">
+
+      <section class="manifesto">
+        <div>
+          <h1 class="manifesto__statement">
+            The people learn<br />
+            <span class="is-red">to change</span><br />
+            the world
+          </h1>
+          <p class="manifesto__note">
+            Popular education starts from people's own experience and builds
+            collective power. This archive keeps its South African traditions
+            in working order: tools for workshops, guides for organising,
+            the record of the movement.
+            <a href="/definitions-popular-education">{{ 'What is popular education?'|t }}</a>
+          </p>
+        </div>
+        <figure class="manifesto__art">
+          <img src="{{ pe_action_art }}" alt="{{ 'Linocut of six people dancing, their shirts spelling ACTION'|t }}" />
+          <figcaption>{{ 'From the movement\'s own materials'|t }}</figcaption>
+        </figure>
+      </section>
+
+      <section class="front-section">
+        <h2 class="register">{{ 'Tools for the work'|t }}</h2>
+        <p>{{ 'Workshop guides, games, handbooks - ready to use in your community, campaign or classroom.'|t }}</p>
+        {{ page.content }}
+        <p class="front-section__more"><a href="/tools">{{ 'All tools'|t }} &rarr;</a></p>
+      </section>
+
+      <section class="rollcall">
+        <h2>{{ 'The movement, organised'|t }}</h2>
+        <p>
+          {% if pe_front.org_count %}
+            {{ '@count organisations doing popular education, from the Western Cape to the continent and beyond.'|t({'@count': pe_front.org_count}) }}
+          {% else %}
+            {{ 'A directory of organisations doing popular education, from the Western Cape to the continent and beyond.'|t }}
+          {% endif %}
+        </p>
+        <a class="btn" href="/organisations">{{ 'Find organisations'|t }}</a>
+      </section>
+
+      <section class="front-section">
+        <h2 class="register">{{ 'From the library'|t }}</h2>
+        {{ pe_front.library }}
+        <p class="front-section__more"><a href="/library">{{ 'Whole library'|t }} &rarr;</a></p>
+      </section>
+
+      <section class="front-section">
+        <h2 class="register">{{ 'Galleries'|t }}</h2>
+        {{ pe_front.galleries }}
+        <p class="front-section__more"><a href="/galleries">{{ 'All galleries'|t }} &rarr;</a></p>
+      </section>
+
+      <section class="front-section">
+        <h2 class="register">{{ 'Listening into popular education'|t }}</h2>
+        <p>{{ 'Recordings from the Popular Education Network gathering, 2018.'|t }}</p>
+        {{ pe_front.audio }}
+        <p class="front-section__more"><a href="/audio">{{ 'The audio archive'|t }} &rarr;</a></p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__credit">
+        <p>
+          <strong>{{ 'Traditions of Popular Education in South Africa'|t }}</strong><br />
+          {{ 'A project led by Shirley Walters and Astrid von Kotze, hosted at the University of the Western Cape with support from the National Institute for the Humanities and Social Sciences.'|t }}
+        </p>
+      </div>
+      <nav aria-label="{{ 'Footer'|t }}">
+        {{ page.footer }}
+      </nav>
+      <div class="site-footer__provenance">
+        {{ 'This site rebuilds the original populareducation.org.za, recovered from the Internet Archive in 2026. Popular education belongs to the people who make it.'|t }}
+      </div>
+    </div>
+  </footer>
+</div>

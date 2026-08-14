@@ -1,0 +1,73 @@
+/* Views listing pages: exposed filters as a print-shop order form. */
+.views-exposed-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--gap);
+  border: var(--rule-light) solid var(--ink);
+  padding: 0.9rem 1rem;
+  margin-bottom: var(--gap-lg);
+  background: var(--paper-shade);
+}
+
+.views-exposed-form label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+
+.views-exposed-form select,
+.views-exposed-form input[type='text'],
+.views-exposed-form input[type='search'] {
+  border: var(--rule-light) solid var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  padding: 0.4rem 0.5rem;
+  min-width: 12rem;
+}
+
+.views-exposed-form .form-actions input[type='submit'],
+.views-exposed-form button {
+  border: var(--rule-light) solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.05em;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+}
+
+.views-exposed-form .form-actions input[type='submit']:hover {
+  background: var(--red);
+}
+
+/* Pager: page numbers as folio marks. */
+.pager__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  list-style: none;
+  padding: 0;
+  margin: var(--gap-lg) 0 0;
+  font-family: var(--font-mono);
+}
+
+.pager__item a,
+.pager__item.is-active .pager__link {
+  display: block;
+  border: 1px solid var(--ink);
+  padding: 0.25rem 0.7rem;
+  text-decoration: none;
+}
+
+.pager__item.is-active a,
+.pager__item a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}

@@ -1,0 +1,16 @@
+{
+  "name": "pe_theme",
+  "private": true,
+  "type": "module",
+  "description": "Build pipeline for the Popular Education Drupal theme. Output is committed to dist/.",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "devDependencies": {
+    "@fontsource/anton": "^5.2.5",
+    "@fontsource-variable/archivo": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "vite": "^8.0.16"
+  }
+}

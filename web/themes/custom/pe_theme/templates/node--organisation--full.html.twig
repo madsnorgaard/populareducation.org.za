@@ -1,0 +1,22 @@
+{% extends 'node.html.twig' %}
+{#
+/**
+ * @file
+ * Organisation: facts strip (active stamp, regions, website) above the body.
+ */
+#}
+{% block facts %}
+  <div class="org-facts">
+    {% if pe.active is defined %}
+      <span class="poster__stamp{{ pe.active ? ' poster__stamp--active' }}">
+        {{ pe.active ? 'Active'|t : 'No longer active'|t }}
+      </span>
+    {% endif %}
+    {% if pe.regions|default([])|length %}
+      <span>{{ pe.regions|join(', ') }}</span>
+    {% endif %}
+    {% if pe.website %}
+      <a href="{{ pe.website }}" rel="external">{{ 'Website'|t }} &rarr;</a>
+    {% endif %}
+  </div>
+{% endblock %}

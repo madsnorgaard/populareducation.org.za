@@ -1,0 +1,19 @@
+{% extends 'node.html.twig' %}
+{#
+/**
+ * @file
+ * Gallery: the grid of prints after the body.
+ */
+#}
+{% block extra %}
+  {% if pe.figures|default([])|length %}
+    <div class="gallery-grid">
+      {% for figure in pe.figures %}
+        <figure>
+          <a href="{{ figure.full }}"><img src="{{ figure.url }}" alt="{{ figure.caption }}" loading="lazy" /></a>
+          {% if figure.caption %}<figcaption>{{ figure.caption }}</figcaption>{% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

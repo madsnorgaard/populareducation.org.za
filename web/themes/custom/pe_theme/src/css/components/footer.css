@@ -1,0 +1,59 @@
+/* Footer: the colophon. */
+.site-footer {
+  border-top: var(--rule-heavy) solid var(--ink);
+  background: var(--paper);
+  margin-top: auto;
+}
+
+.site-footer__inner {
+  max-width: var(--site-max);
+  margin: 0 auto;
+  padding: var(--gap-lg) var(--gap);
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--gap-lg);
+}
+
+.site-footer__credit {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+  max-width: 52ch;
+}
+
+.site-footer__credit strong {
+  color: var(--ink);
+}
+
+.site-footer nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer nav a {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.2rem 0;
+}
+
+.site-footer nav a:hover {
+  color: var(--red);
+}
+
+.site-footer__provenance {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  border-top: 1px solid var(--ink-soft);
+  margin-top: var(--gap);
+  padding-top: 0.6rem;
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 47rem) {
+  .site-footer__inner {
+    grid-template-columns: 1fr;
+  }
+}

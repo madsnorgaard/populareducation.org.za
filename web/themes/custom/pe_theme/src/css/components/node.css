@@ -1,0 +1,159 @@
+/* Full node pages: the document itself. */
+.node-full__header {
+  margin-bottom: var(--gap-lg);
+}
+
+.node-full__title {
+  font-size: var(--fs-2xl);
+  max-width: 22ch;
+}
+
+.node-full__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.node-full__topics a {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  padding: 0.15rem 0.5rem;
+  color: var(--ink);
+}
+
+.node-full__topics a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.node__body {
+  max-width: var(--measure);
+}
+
+.node__body a {
+  word-break: break-word;
+}
+
+/* Attachments: the downloads ARE the point of a tool. Set them like a
+   materials list on a workshop handout. */
+.attachments {
+  margin: var(--gap-lg) 0;
+  border: var(--rule-light) solid var(--ink);
+  max-width: var(--measure);
+}
+
+.attachments__title {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 1rem;
+}
+
+.attachments ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.attachments li {
+  border-top: 1px solid var(--ink);
+}
+
+.attachments li:first-child {
+  border-top: 0;
+}
+
+.attachments a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  text-decoration: none;
+}
+
+.attachments a:hover {
+  background: var(--paper-shade);
+}
+
+.attachments__ext {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  color: var(--red);
+  white-space: nowrap;
+  align-self: center;
+}
+
+/* Organisation facts. */
+.org-facts {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  margin: 0 0 var(--gap-lg);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  max-width: var(--measure);
+  padding: 0.6rem 0;
+  border-top: var(--rule-light) solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+/* Gallery grid on gallery nodes. */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--gap);
+  margin: var(--gap-lg) 0;
+}
+
+.gallery-grid figure {
+  margin: 0;
+}
+
+.gallery-grid figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  padding-top: 0.35rem;
+}
+
+/* Audio list on audio nodes. */
+.audio-list {
+  list-style: none;
+  margin: var(--gap-lg) 0;
+  padding: 0;
+  max-width: var(--measure);
+}
+
+.audio-list li {
+  border: 1px solid var(--ink);
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+  background: var(--paper-shade);
+}
+
+.audio-list .slug {
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* Provenance note at the foot of migrated pages. */
+.provenance {
+  margin-top: var(--gap-lg);
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}

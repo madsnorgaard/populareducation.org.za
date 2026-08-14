@@ -1,0 +1,14 @@
+name: 'Popular Education'
+type: theme
+description: 'Struggle-poster theme for Popular Education South Africa: newsprint paper, linocut ink, silkscreen red.'
+package: Custom
+core_version_requirement: ^11
+base theme: false
+
+libraries:
+  - pe_theme/global
+
+regions:
+  header: Header
+  content: Content
+  footer: Footer

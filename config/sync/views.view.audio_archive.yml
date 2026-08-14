@@ -1,0 +1,159 @@
+uuid: 74d22da7-b063-410d-af6c-7e1751f635cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.audio_item
+    - taxonomy.vocabulary.topics
+  module:
+    - node
+    - taxonomy
+    - user
+id: audio_archive
+label: 'Audio archive'
+module: views
+description: 'Audio archive listing with topic filter.'
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'Audio archive'
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 36
+      exposed_form:
+        type: basic
+        options: {  }
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>Nothing published here yet. Migrated drafts are being reviewed.</p>'
+            format: basic_html
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            audio_item: audio_item
+        tid:
+          id: tid
+          table: taxonomy_index
+          field: tid
+          relationship: none
+          plugin_id: taxonomy_index_tid
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: tid_op
+            label: Topic
+            operator: tid_op
+            identifier: topic
+            required: false
+            multiple: false
+            reduce: true
+          reduce_duplicates: true
+          vid: topics
+          type: select
+          hierarchy: false
+          limit: true
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
+      query:
+        type: views_query
+        options: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  embed_1:
+    id: embed_1
+    display_title: Embed
+    display_plugin: embed
+    position: 2
+    display_options:
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 6
+      defaults:
+        pager: false
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: audio
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
