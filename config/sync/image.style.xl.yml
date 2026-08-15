@@ -1,0 +1,21 @@
+uuid: 4a888ea7-5b24-43a7-8960-186d5a472596
+langcode: en
+status: true
+dependencies: {  }
+name: xl
+label: 'XL (2000)'
+effects:
+  1c8b5876-02c1-49d6-8047-3ec669728b0c:
+    uuid: 1c8b5876-02c1-49d6-8047-3ec669728b0c
+    id: image_scale
+    weight: 1
+    data:
+      width: 2000
+      height: null
+      upscale: false
+  73791933-96a9-4fd8-a27e-e25cebdbaf16:
+    uuid: 73791933-96a9-4fd8-a27e-e25cebdbaf16
+    id: image_convert_avif
+    weight: 2
+    data:
+      extension: webp

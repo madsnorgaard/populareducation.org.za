@@ -1,0 +1,19 @@
+uuid: 7eca9557-e89f-4d03-9cea-d3c5c1f88d7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_credit
+    - media.type.image
+id: media.image.field_credit
+field_name: field_credit
+entity_type: media
+bundle: image
+label: Credit
+description: 'Photographer or source. Leave empty for none.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

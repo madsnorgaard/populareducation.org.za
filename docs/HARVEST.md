@@ -13,3 +13,14 @@ from the Wayback Machine.
   see [MISSING-CONTENT.md](MISSING-CONTENT.md).
 
 Staging into the site: see [ONBOARDING.md](ONBOARDING.md) step 3.
+
+## Gallery per-image metadata
+
+The D7 `/media-gallery/detail/GID/MID` pages (harvest kind `gallery_media`)
+carry the real per-image titles, ordering and captions that the node/media
+migrations never used. `scripts/extract-gallery-media.php` distils them into
+the committed `scripts/gallery-media.json`; the idempotent
+`scripts/backfill-gallery-media.php` applies names/alt/captions/order to the
+gallery media (this is the piece that also runs on production, where the
+harvest itself is absent). Re-running the legacy media/gallery migrations
+with `--update` clobbers the backfilled names - re-run the backfill after.
