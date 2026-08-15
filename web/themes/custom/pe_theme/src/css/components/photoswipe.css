@@ -35,21 +35,15 @@
 
 .pswp--pe .pswp__icn {
   filter: none;
-  top: 8px;
-  left: 8px;
 }
 
 .pswp--pe .pswp__icn-shadow {
   display: none;
 }
 
-/* Our chevron points right; the stock one points left, and the default CSS
-   mirrors the *next* button. Mirror prev instead. */
-.pswp--pe .pswp__button--arrow--prev .pswp__icn {
-  transform: scale(-1, 1);
-}
-
-.pswp--pe .pswp__button--arrow--next .pswp__icn {
+/* Each arrow SVG already points its own way - undo the stock CSS that
+   mirrors the next icon, keep the default centring. */
+.pswp--pe .pswp__button--arrow .pswp__icn {
   transform: none;
 }
 
