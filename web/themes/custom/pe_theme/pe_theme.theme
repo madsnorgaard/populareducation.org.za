@@ -266,17 +266,50 @@ function _pe_theme_prepare_gallery(NodeInterface $node): array {
   if ($node->hasField('field_images')) {
     foreach ($node->get('field_images')->referencedEntities() as $media) {
       $url = _pe_theme_image_url($media, 'large');
-      if ($url) {
-        $label = $media->label();
-        $figures[] = [
-          'url' => $url,
-          'full' => _pe_theme_image_url($media, NULL),
-          'caption' => preg_match('/^(view larger image|untitled)/i', $label) ? NULL : $label,
-        ];
+      if (!$url) {
+        continue;
       }
+      $source = $media->get('field_media_image')->getValue()[0] ?? [];
+      $w = (int) ($source['width'] ?? 0);
+      $h = (int) ($source['height'] ?? 0);
+      // Derivative dimensions: each style is an image_scale with upscaling
+      // off, so the ratio never exceeds 1. large bounds both edges at 480;
+      // wide/xl bound only the width (1090/2000).
+      $scale = static fn (float $ratio): array => [
+        (int) round($w * min(1.0, $ratio)),
+        (int) round($h * min(1.0, $ratio)),
+      ];
+      $srcset = NULL;
+      $dims = ['large' => NULL, 'wide' => NULL, 'xl' => NULL];
+      if ($w && $h) {
+        $dims['large'] = $scale(min(480 / $w, 480 / $h));
+        $dims['wide'] = $scale(1090 / $w);
+        $dims['xl'] = $scale(2000 / $w);
+        $candidates = [];
+        foreach ($dims as $style => [$dw]) {
+          // Skip styles that resolve to the same width (small originals).
+          $candidates[$dw] ??= _pe_theme_image_url($media, $style) . " {$dw}w";
+        }
+        $srcset = implode(', ', $candidates);
+      }
+      $figures[] = [
+        'url' => $url,
+        'srcset' => $srcset,
+        'sizes' => '(min-width: 48rem) 18rem, 100vw',
+        'width' => $dims['large'][0] ?? NULL,
+        'height' => $dims['large'][1] ?? NULL,
+        'full' => _pe_theme_image_url($media, 'xl'),
+        'download' => _pe_theme_image_url($media, NULL),
+        'pswp_w' => $dims['xl'][0] ?? NULL,
+        'pswp_h' => $dims['xl'][1] ?? NULL,
+        'caption' => $media->hasField('field_caption') ? $media->get('field_caption')->value : NULL,
+        'credit' => $media->hasField('field_credit') ? $media->get('field_credit')->value : NULL,
+        'alt' => $source['alt'] ?? '',
+        'index' => count($figures) + 1,
+      ];
     }
   }
-  return ['figures' => $figures];
+  return ['figures' => $figures, 'count' => count($figures)];
 }
 
 /**

@@ -24,6 +24,9 @@
       <p class="poster__summary">{{ node.body.summary }}</p>
     {% endif %}
     <div class="poster__meta">
+      {% if pe.count %}
+        <span class="has-files">{{ pe.count == 1 ? '1 photo'|t : '@count photos'|t({'@count': pe.count}) }}</span>
+      {% endif %}
       {% if pe.attachments|length %}
         <span class="has-files">{{ pe.attachments|length == 1 ? '1 file'|t : '@count files'|t({'@count': pe.attachments|length}) }}</span>
       {% endif %}

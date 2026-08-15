@@ -134,6 +134,74 @@
   padding-top: 0.35rem;
 }
 
+/* Each print gets a flat ink strip on hover/focus: position and a zoom
+   mark. Decorative only - the caption lives below the tile. */
+.gallery-item__link {
+  position: relative;
+  display: block;
+}
+
+.gallery-item__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-item__overlay {
+    transition: opacity 0.15s ease;
+  }
+}
+
+.gallery-item__link:hover .gallery-item__overlay,
+.gallery-item__link:focus-visible .gallery-item__overlay {
+  opacity: 1;
+}
+
+/* The zoom mark: a bordered square with a plus, drawn with pseudo
+   elements - flat, square, no icon font. */
+.gallery-item__zoom {
+  position: relative;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid var(--paper);
+}
+
+.gallery-item__zoom::before,
+.gallery-item__zoom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  background: var(--paper);
+}
+
+.gallery-item__zoom::before {
+  width: 0.5rem;
+  height: 1px;
+}
+
+.gallery-item__zoom::after {
+  width: 1px;
+  height: 0.5rem;
+}
+
+/* No hover, no overlay - the figcaption below carries the information. */
+@media (hover: none) {
+  .gallery-item__overlay {
+    display: none;
+  }
+}
+
 /* Audio list on audio nodes. */
 .audio-list {
   list-style: none;

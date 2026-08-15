@@ -3,14 +3,31 @@
 /**
  * @file
  * Gallery: the grid of prints after the body.
+ *
+ * Each tile links to the 2000px derivative - a working page without any
+ * JavaScript. The lightbox (dist chunk, loaded only on gallery pages)
+ * upgrades those links in place, reading data-pswp-* for sizing and the
+ * figcaption for its caption bar.
  */
 #}
 {% block extra %}
   {% if pe.figures|default([])|length %}
     <div class="gallery-grid">
       {% for figure in pe.figures %}
-        <figure>
-          <a href="{{ figure.full }}"><img src="{{ figure.url }}" alt="{{ figure.caption }}" loading="lazy" /></a>
+        <figure class="gallery-item">
+          <a class="gallery-item__link" href="{{ figure.full }}"
+             {% if figure.pswp_w %}data-pswp-width="{{ figure.pswp_w }}" data-pswp-height="{{ figure.pswp_h }}"{% endif %}
+             {% if figure.download %}data-download="{{ figure.download }}"{% endif %}
+             {% if figure.credit %}data-credit="{{ figure.credit }}"{% endif %}>
+            <img src="{{ figure.url }}"
+                 {% if figure.srcset %}srcset="{{ figure.srcset }}" sizes="{{ figure.sizes }}"{% endif %}
+                 {% if figure.width %}width="{{ figure.width }}" height="{{ figure.height }}"{% endif %}
+                 alt="{{ figure.alt }}" loading="lazy" />
+            <span class="gallery-item__overlay" aria-hidden="true">
+              <span class="gallery-item__index">{{ figure.index }}/{{ pe.count }}</span>
+              <span class="gallery-item__zoom"></span>
+            </span>
+          </a>
           {% if figure.caption %}<figcaption>{{ figure.caption }}</figcaption>{% endif %}
         </figure>
       {% endfor %}
