@@ -6,6 +6,8 @@
 @import './components/masthead.css';
 @import './components/poster.css';
 @import './components/node.css';
+@import 'photoswipe/dist/photoswipe.css';
+@import './components/photoswipe.css';
 @import './components/listing.css';
 @import './components/front.css';
 @import './components/footer.css';

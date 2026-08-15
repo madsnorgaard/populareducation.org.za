@@ -8,9 +8,10 @@
     "watch": "vite build --watch"
   },
   "devDependencies": {
-    "@fontsource/anton": "^5.2.5",
     "@fontsource-variable/archivo": "^5.2.8",
+    "@fontsource/anton": "^5.2.5",
     "@fontsource/ibm-plex-mono": "^5.2.7",
+    "photoswipe": "^5.4.4",
     "vite": "^8.0.16"
   }
 }
