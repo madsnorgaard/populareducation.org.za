@@ -36,6 +36,13 @@ const observeReveal = (root) => {
 // Mark the current section in the masthead nav.
 document.addEventListener('DOMContentLoaded', () => {
   observeReveal(document);
+
+  // Gallery pages upgrade their plain image links to a lightbox; the
+  // chunk only loads where a grid exists.
+  if (document.querySelector('.gallery-grid')) {
+    import('./gallery.js').then((m) => m.init());
+  }
+
   const path = window.location.pathname;
   document.querySelectorAll('.masthead__nav a').forEach((a) => {
     const href = a.getAttribute('href');

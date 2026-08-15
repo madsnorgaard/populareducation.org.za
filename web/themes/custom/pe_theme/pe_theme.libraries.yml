@@ -6,4 +6,7 @@ global:
     theme:
       dist/main.css: { preprocess: false }
   js:
-    dist/main.js: { preprocess: false, attributes: { defer: true } }
+    # type=module: the bundle code-splits (gallery lightbox loads as a
+    # dynamic chunk), and Vite's chunk loader resolves URLs via
+    # import.meta - only legal in a module script. Modules defer natively.
+    dist/main.js: { preprocess: false, attributes: { type: module } }
