@@ -27,15 +27,6 @@ process:
       bundle: topics
       value_key: name
   field_legacy_id: legacy_path
-  field_documents:
-    plugin: sub_process
-    source: doc_refs
-    process:
-      target_id:
-        plugin: migration_lookup
-        migration: pe_legacy_media_documents
-        source: sha256
-        no_stub: true
   field_images:
     plugin: sub_process
     source: image_refs
