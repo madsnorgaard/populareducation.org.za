@@ -38,8 +38,6 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     restart: always
-    ports:
-      - 9985:80
     working_dir: /opt/drupal
     volumes:
       - ./backups:/opt/drupal/backups
