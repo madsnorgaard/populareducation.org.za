@@ -32,7 +32,7 @@
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "drupal/coder": "^8.3",
+        "drupal/coder": "^9.0",
         "mglaman/phpstan-drupal": "^2.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.0",
