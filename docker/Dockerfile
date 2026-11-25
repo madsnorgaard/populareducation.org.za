@@ -28,4 +28,8 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader
 RUN chown -R www-data:www-data /opt/drupal /opt/drupal/backups \
     && chmod -R 775 /opt/drupal
 
+RUN printf '%s\n' '<LocationMatch "^/(core/)?(install|rebuild)\.php">' '    Require all denied' '</LocationMatch>' \
+      > /etc/apache2/conf-available/block-installer.conf \
+    && a2enconf block-installer
+
 CMD ["apache2-foreground"]
